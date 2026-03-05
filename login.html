@@ -290,16 +290,30 @@
 
     <div class="card">
         <div class="logo">
-            <svg class="cloud-icon" width="130" height="80" viewBox="0 0 200 120" fill="none"
+            <svg class="cloud-icon" width="160" height="96" viewBox="0 0 320 180" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
-                <!-- Nube trasera (más pequeña, a la derecha) -->
-                <ellipse cx="148" cy="72" rx="38" ry="28" fill="#d0d5cb" />
-                <ellipse cx="168" cy="62" rx="26" ry="22" fill="#d0d5cb" />
+                <defs>
+                    <radialGradient id="cg1" cx="45%" cy="30%" r="70%">
+                        <stop offset="0%" stop-color="#f2f4f0" />
+                        <stop offset="100%" stop-color="#c4cac0" />
+                    </radialGradient>
+                    <radialGradient id="cg2" cx="50%" cy="30%" r="65%">
+                        <stop offset="0%" stop-color="#e6e9e3" />
+                        <stop offset="100%" stop-color="#b8beb4" />
+                    </radialGradient>
+                </defs>
+                <!-- Nube de fondo (derecha, más pequeña) -->
+                <path
+                    d="M204 136 C190 136 182 126 183 114 C184 100 196 92 210 95 C214 80 228 72 244 76 C256 62 276 66 282 82 C296 82 306 94 302 108 C300 122 288 130 274 130 Z"
+                    fill="url(#cg2)" opacity="0.7" />
                 <!-- Nube principal -->
-                <ellipse cx="80" cy="80" rx="58" ry="36" fill="#dde0d9" />
-                <ellipse cx="60" cy="62" rx="34" ry="30" fill="#dde0d9" />
-                <ellipse cx="102" cy="56" rx="32" ry="28" fill="#dde0d9" />
-                <ellipse cx="78" cy="50" rx="28" ry="26" fill="#e4e7e1" />
+                <path
+                    d="M18 148 C6 148 -2 136 2 122 C-4 106 8 92 24 90 C24 68 44 52 68 54 C76 34 98 22 124 30 C138 12 164 14 176 34 C198 30 216 48 212 70 C230 74 240 92 234 110 C234 128 220 140 204 140 C196 152 180 156 164 148 C150 158 130 158 116 148 C100 158 80 156 66 146 C50 154 30 154 18 148 Z"
+                    fill="url(#cg1)" />
+                <!-- Brillo pequeño en la cima -->
+                <ellipse cx="130" cy="46" rx="32" ry="12" fill="white" opacity="0.30" />
+                <!-- Sombra inferior difusa -->
+                <ellipse cx="132" cy="165" rx="90" ry="8" fill="rgba(0,0,0,0.06)" />
             </svg>
             <h1>IAMx · Comalcalco</h1>
             <p>Nube Municipal Inteligente<br>Acceso restringido a usuarios autorizados</p>
