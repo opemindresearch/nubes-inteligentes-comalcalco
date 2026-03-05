@@ -840,6 +840,79 @@
       line-height: 1.3;
     }
 
+    /* ─── Entregables collapsible blocks (green) ─── */
+    .deliv-details {
+      border-radius: 14px;
+      border: 1.5px solid rgba(120, 180, 40, .30);
+      background: rgba(220, 245, 190, .48);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 14px rgba(80, 140, 20, .09);
+      margin-bottom: 10px;
+      overflow: hidden;
+      transition: box-shadow .2s;
+    }
+
+    .deliv-details[open] {
+      box-shadow: 0 6px 28px rgba(80, 140, 20, .18);
+    }
+
+    .deliv-summary {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 16px;
+      cursor: pointer;
+      list-style: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .deliv-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .deliv-summary h3 {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 800;
+      color: #2e5c06;
+      letter-spacing: -.1px;
+      flex: 1;
+    }
+
+    .deliv-summary .dsub {
+      font-size: 11px;
+      color: #4a7a0a;
+      font-weight: 600;
+    }
+
+    .deliv-summary .darrow {
+      font-size: 13px;
+      color: #4a7a0a;
+      transition: transform .22s;
+    }
+
+    .deliv-details[open] .darrow {
+      transform: rotate(90deg);
+    }
+
+    .deliv-body {
+      padding: 0 14px 14px;
+    }
+
+    .deliv-list {
+      margin: 6px 0 0;
+      padding-left: 18px;
+      color: #2e5c06;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .deliv-list li {
+      margin-bottom: 3px;
+    }
+
 
     /* ─── Bottom bar ─── */
     .bottom {
@@ -1813,14 +1886,32 @@
         }
       ];
       for (const c of cards) {
-        const box = document.createElement("div");
-        box.className = "box";
-        box.style.marginBottom = "10px";
-        const items = c.items.map(x => `<li>${x}</li>`).join("");
-        box.innerHTML = `<h3>${c.title}</h3><p>Definición de terminado (F6)</p><ul style="margin:10px 0 0;padding-left:18px;color:#374151;font-size:12px;line-height:1.4">${items}</ul>`;
-        el.appendChild(box);
+        const det = document.createElement("details");
+        det.className = "deliv-details";
+
+        const sum = document.createElement("summary");
+        sum.className = "deliv-summary";
+        sum.innerHTML = `
+          <h3>${c.title}</h3>
+          <span class="dsub">${c.items.length} entregable${c.items.length > 1 ? 's' : ''}</span>
+          <span class="darrow">▶</span>`;
+        det.appendChild(sum);
+
+        const body = document.createElement("div");
+        body.className = "deliv-body";
+        const ul = document.createElement("ul");
+        ul.className = "deliv-list";
+        c.items.forEach(x => {
+          const li = document.createElement("li");
+          li.textContent = x;
+          ul.appendChild(li);
+        });
+        body.appendChild(ul);
+        det.appendChild(body);
+        el.appendChild(det);
       }
     }
+
     function bindChips() {
       document.querySelectorAll(".chip").forEach(ch => {
         ch.addEventListener("click", () => {
