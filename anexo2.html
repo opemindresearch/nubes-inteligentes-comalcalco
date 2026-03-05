@@ -1,425 +1,107 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-    <title>IAMx · Anexo 2 — Proyectos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Anexo 2 · IAMx Comalcalco</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap"
+        rel="stylesheet" />
     <style>
-        :root {
-            --a: #8ec63f;
-            --b: #5fae3c;
-            --g: #aadc44;
-            --r: #e05252;
-            --y: #f0b429;
-            --text: #1c1f17;
-            --muted: #7a8070;
-            --sans: 'Inter', ui-sans-serif, system-ui;
-            --ease: cubic-bezier(.2, .9, .2, 1);
-            --R: 20px;
-            --R2: 14px;
-            --glass: 0 8px 40px rgba(100, 120, 80, .13), 0 1.5px 6px rgba(100, 120, 80, .08);
-        }
-
-        * {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        html,
-        body {
-            min-height: 100%;
+        :root {
+            --a: #8ec63f;
+            --b: #4a7a0a;
+            --bg: #f2f5ec;
+            --card: rgba(255, 255, 255, .82);
+            --text: #1a2210;
+            --muted: #6b7d55;
+            --border: rgba(140, 160, 100, .28);
+            --sans: 'Inter', system-ui, sans-serif;
+            --ease: cubic-bezier(.4, 0, .2, 1);
         }
 
         body {
+            background: var(--bg);
             font-family: var(--sans);
-            background: linear-gradient(145deg, #d8e0ce 0%, #e4e9dc 50%, #cdd8c2 100%);
             color: var(--text);
-            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
         }
 
-        /* ── Topbar ── */
+        /* TOP BAR */
         .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background: rgba(240, 244, 234, .9);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             position: sticky;
             top: 0;
             z-index: 50;
-            padding: 10px 20px;
-            backdrop-filter: blur(22px) saturate(1.4);
-            -webkit-backdrop-filter: blur(22px) saturate(1.4);
-            background: rgba(230, 235, 222, .92);
-            border-bottom: 1.5px solid rgba(180, 195, 160, .28);
-            box-shadow: 0 2px 16px rgba(80, 100, 60, .08);
+        }
+
+        .tb-left {
             display: flex;
             align-items: center;
-            justify-content: space-between;
             gap: 12px;
         }
 
-        .topbar-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .tb-logo {
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: -.5px;
+            color: var(--b);
         }
 
-        .topbar-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 11px;
-            background: linear-gradient(135deg, #8ec63f, #c8f000);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 3px 12px rgba(142, 198, 63, .3);
-        }
-
-        .topbar-title {
-            font-size: 15px;
-            font-weight: 800;
-            letter-spacing: -.3px;
-        }
-
-        .topbar-sub {
+        .tb-sub {
             font-size: 11px;
             color: var(--muted);
-            margin-top: 1px;
+            font-weight: 600;
         }
 
-        .topbar-right {
+        .tb-actions {
             display: flex;
             gap: 8px;
-            align-items: center;
         }
 
-        .btn-nav {
-            padding: 8px 14px;
-            border-radius: 11px;
-            border: 1.5px solid rgba(160, 175, 140, .32);
-            background: rgba(255, 255, 255, .65);
+        .btn-back,
+        .btn-save {
+            padding: 6px 14px;
+            border-radius: 999px;
             font-family: var(--sans);
             font-size: 12px;
             font-weight: 700;
-            color: var(--muted);
             cursor: pointer;
             transition: all .18s;
-        }
-
-        .btn-nav:hover {
-            border-color: var(--a);
-            color: var(--b);
-            background: rgba(200, 240, 0, .1);
-        }
-
-        .btn-nav.primary {
-            background: linear-gradient(135deg, #8ec63f, #b8e04a);
-            color: #fff;
-            border: none;
-            box-shadow: 0 3px 12px rgba(142, 198, 63, .3);
-        }
-
-        .btn-nav.primary:hover {
-            box-shadow: 0 5px 18px rgba(142, 198, 63, .45);
-            transform: translateY(-1px);
-        }
-
-        /* ── Layout ── */
-        .wrap {
-            max-width: 760px;
-            margin: 0 auto;
-            padding: 24px 16px 100px;
-        }
-
-        /* ── Project tabs ── */
-        .proj-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-
-        .proj-tabs::-webkit-scrollbar {
-            display: none;
-        }
-
-        .ptab {
-            padding: 10px 20px;
-            border-radius: 999px;
-            border: 1.5px solid rgba(160, 175, 140, .32);
-            background: rgba(255, 255, 255, .65);
-            font-family: var(--sans);
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--muted);
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all .18s;
-        }
-
-        .ptab:hover {
-            border-color: var(--a);
-            color: var(--b);
-        }
-
-        .ptab.active {
-            background: linear-gradient(135deg, rgba(142, 198, 63, .18), rgba(200, 240, 0, .12));
-            border-color: var(--a);
-            color: var(--b);
-        }
-
-        /* ── Section card ── */
-        .scard {
-            background: rgba(255, 255, 255, .75);
-            border: 1.5px solid rgba(180, 195, 160, .28);
-            border-radius: var(--R);
-            backdrop-filter: blur(18px) saturate(1.3);
-            -webkit-backdrop-filter: blur(18px) saturate(1.3);
-            box-shadow: var(--glass);
-            overflow: hidden;
-            margin-bottom: 16px;
-        }
-
-        .scard-head {
-            padding: 14px 20px 12px;
-            border-bottom: 1.5px solid rgba(160, 175, 140, .18);
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .scard-head h2 {
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: .12em;
-            text-transform: uppercase;
-            color: var(--muted);
-        }
-
-        .scard-head p {
-            font-size: 12px;
-            color: var(--muted);
-            margin-top: 4px;
-        }
-
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 10.5px;
-            font-weight: 700;
-            white-space: nowrap;
-            flex: 0 0 auto;
-        }
-
-        .status-badge.pending {
-            background: rgba(240, 180, 41, .12);
-            border: 1.5px solid rgba(240, 180, 41, .3);
-            color: #a06800;
-        }
-
-        .status-badge.approved {
-            background: rgba(142, 198, 63, .12);
-            border: 1.5px solid rgba(142, 198, 63, .3);
-            color: var(--b);
-        }
-
-        .status-badge.draft {
-            background: rgba(120, 128, 112, .1);
-            border: 1.5px solid rgba(120, 128, 112, .25);
-            color: var(--muted);
-        }
-
-        .scard-body {
-            padding: 18px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        /* ── Form fields ── */
-        fieldset {
             border: none;
         }
 
-        .field-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .field-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        @media (max-width: 520px) {
-            .field-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .field label {
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
+        .btn-back {
+            background: rgba(255, 255, 255, .7);
             color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: .06em;
-            margin-bottom: 6px;
+            border: 1.5px solid var(--border);
         }
 
-        .field input,
-        .field textarea,
-        .field select {
-            width: 100%;
-            border-radius: 12px;
-            border: 1.5px solid rgba(160, 175, 140, .33);
-            background: rgba(255, 255, 255, .72);
-            padding: 11px 14px;
-            font-family: var(--sans);
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text);
-            outline: none;
-            transition: border-color .18s, box-shadow .18s;
-        }
-
-        .field textarea {
-            resize: vertical;
-            min-height: 80px;
-            line-height: 1.5;
-        }
-
-        .field input:focus,
-        .field textarea:focus,
-        .field select:focus {
+        .btn-back:hover {
             border-color: var(--a);
-            box-shadow: 0 0 0 3px rgba(142, 198, 63, .16);
-        }
-
-        .field input::placeholder,
-        .field textarea::placeholder {
-            color: var(--muted);
-            font-weight: 400;
-        }
-
-        .field input[readonly],
-        .field textarea[readonly] {
-            background: rgba(240, 243, 236, .6);
-            color: var(--muted);
-            cursor: default;
-        }
-
-        .field select {
-            appearance: none;
-            cursor: pointer;
-        }
-
-        /* ── Signature grid ── */
-        .sig-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px;
-        }
-
-        .sig-box {
-            border-radius: 12px;
-            border: 1.5px solid rgba(160, 175, 140, .28);
-            background: rgba(255, 255, 255, .52);
-            padding: 12px;
-        }
-
-        .sig-box .name {
-            font-size: 12.5px;
-            font-weight: 700;
-        }
-
-        .sig-box .role {
-            font-size: 11px;
-            color: var(--muted);
-            margin-top: 2px;
-        }
-
-        .sig-box .sig-line {
-            margin-top: 8px;
-            height: 2px;
-            border-radius: 1px;
-            background: rgba(160, 175, 140, .25);
-        }
-
-        .sig-box .sig-signed {
-            margin-top: 8px;
-            padding: 3px 8px;
-            border-radius: 6px;
-            background: rgba(142, 198, 63, .12);
-            border: 1px solid rgba(142, 198, 63, .28);
-            font-size: 10.5px;
-            font-weight: 700;
             color: var(--b);
-            text-align: center;
-        }
-
-        .sig-box .sig-pending {
-            margin-top: 8px;
-            padding: 3px 8px;
-            border-radius: 6px;
-            background: rgba(240, 180, 41, .09);
-            border: 1px solid rgba(240, 180, 41, .25);
-            font-size: 10.5px;
-            font-weight: 700;
-            color: #a06800;
-            text-align: center;
-        }
-
-        .sig-btn {
-            margin-top: 8px;
-            width: 100%;
-            padding: 7px;
-            border-radius: 9px;
-            border: none;
-            background: linear-gradient(135deg, #8ec63f, #b8e04a);
-            color: #fff;
-            font-family: var(--sans);
-            font-size: 11.5px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all .18s;
-        }
-
-        .sig-btn:hover {
-            box-shadow: 0 3px 12px rgba(142, 198, 63, .35);
-        }
-
-        .sig-btn:disabled {
-            opacity: .4;
-            cursor: not-allowed;
-        }
-
-        /* ── Action bar ── */
-        .action-bar {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 4px;
         }
 
         .btn-save {
-            flex: 1;
-            min-height: 46px;
-            border-radius: 14px;
-            border: none;
             background: linear-gradient(135deg, #8ec63f, #b8e04a);
             color: #fff;
-            font-family: var(--sans);
-            font-size: 14px;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(142, 198, 63, .3);
-            transition: all .2s;
+            box-shadow: 0 4px 14px rgba(142, 198, 63, .3);
         }
 
         .btn-save:hover {
@@ -427,420 +109,749 @@
             transform: translateY(-1px);
         }
 
-        .btn-approve {
-            padding: 0 22px;
-            min-height: 46px;
-            border-radius: 14px;
-            border: none;
-            background: linear-gradient(135deg, #3d8b3d, #5fae3c);
+        /* HERO */
+        .hero {
+            padding: 30px 24px 16px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: -.5px;
+            margin-bottom: 4px;
+        }
+
+        .hero p {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            padding: 0 24px 16px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .tab {
+            padding: 8px 22px;
+            border-radius: 999px;
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .18s;
+            border: 1.5px solid var(--border);
+            background: rgba(255, 255, 255, .6);
+            color: var(--muted);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #8ec63f, #b8e04a);
             color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 14px rgba(142, 198, 63, .3);
+        }
+
+        .tab:hover:not(.active) {
+            border-color: var(--a);
+            color: var(--b);
+        }
+
+        /* STATUS BADGE */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            margin-bottom: 16px;
+        }
+
+        .status-draft {
+            background: rgba(180, 180, 180, .15);
+            color: #7a7a7a;
+            border: 1px solid rgba(180, 180, 180, .3);
+        }
+
+        .status-pending {
+            background: rgba(255, 170, 0, .12);
+            color: #b07700;
+            border: 1px solid rgba(255, 170, 0, .25);
+        }
+
+        .status-approved {
+            background: rgba(142, 198, 63, .14);
+            color: var(--b);
+            border: 1px solid rgba(142, 198, 63, .3);
+        }
+
+        /* CARD */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(40, 60, 20, .08);
+            padding: 28px;
+            margin: 0 auto 24px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: 24px;
+        }
+
+        @media(max-width:960px) {
+            .card {
+                margin: 0 16px 20px;
+            }
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--muted);
+            margin-bottom: 18px;
+        }
+
+        /* HEADER INFO */
+        .proj-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .ph-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .ph-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+        }
+
+        .ph-input {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            background: rgba(255, 255, 255, .7);
+            outline: none;
+            transition: border-color .15s, box-shadow .15s;
+        }
+
+        .ph-input:focus {
+            border-color: var(--a);
+            box-shadow: 0 0 0 3px rgba(142, 198, 63, .15);
+        }
+
+        .ph-input[readonly] {
+            background: rgba(240, 244, 234, .6);
+            color: var(--muted);
+            cursor: default;
+        }
+
+        /* ANEXO TABLE */
+        .anexo-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        .anexo-table th {
+            background: rgba(142, 198, 63, .15);
+            padding: 10px 8px;
+            text-align: center;
+            font-size: 10.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: var(--b);
+            border: 1px solid var(--border);
+        }
+
+        .anexo-table td {
+            border: 1px solid var(--border);
+            padding: 8px 8px;
+            vertical-align: middle;
+        }
+
+        .anexo-table td input,
+        .anexo-table td select {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-family: var(--sans);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+            outline: none;
+            padding: 2px 4px;
+        }
+
+        .anexo-table td input[readonly] {
+            color: var(--muted);
+            cursor: default;
+        }
+
+        .anexo-table .total-row td {
+            background: rgba(142, 198, 63, .08);
+            font-weight: 800;
+            font-size: 12px;
+            padding: 10px 8px;
+        }
+
+        .total-label {
+            text-align: right;
+            font-weight: 800;
+            color: var(--b);
+        }
+
+        /* ASESOR FIELD */
+        .asesor-wrap {
+            margin-bottom: 20px;
+        }
+
+        .asesor-input {
+            width: 100%;
+            border: none;
+            border-bottom: 1.5px solid var(--border);
+            background: transparent;
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            padding: 6px 4px;
+            outline: none;
+            transition: border-color .15s;
+        }
+
+        .asesor-input:focus {
+            border-bottom-color: var(--a);
+        }
+
+        .asesor-input[readonly] {
+            color: var(--muted);
+            cursor: default;
+        }
+
+        /* FIRMAS */
+        .firma-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px 40px;
+            margin-top: 8px;
+        }
+
+        .firma-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .firma-line {
+            border-bottom: 1.5px solid var(--text);
+            padding-bottom: 4px;
+            min-height: 40px;
+        }
+
+        .firma-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .firma-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-family: var(--sans);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+            padding: 2px 4px;
+            outline: none;
+            text-align: center;
+        }
+
+        .firma-input[readonly] {
+            color: var(--muted);
+            cursor: default;
+        }
+
+        .firma-signed {
+            font-size: 12px;
+            color: var(--b);
+            font-weight: 700;
+            text-align: center;
+            padding: 4px;
+        }
+
+        /* VISTO BUENO */
+        .vobo-row {
+            display: flex;
+            gap: 40px;
+            margin-top: 28px;
+            align-items: flex-end;
+        }
+
+        .vobo-left {
+            flex: 1;
+        }
+
+        .vobo-right {
+            flex: 1;
+        }
+
+        .vobo-title {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .ccps {
+            margin-top: 28px;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+        }
+
+        .ccp-item {
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 3px;
+        }
+
+        /* ACTIONS */
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 24px 32px;
+            max-width: 900px;
+        }
+
+        .act-btn {
+            padding: 10px 22px;
+            border-radius: 13px;
             font-family: var(--sans);
             font-size: 13px;
             font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 4px 14px rgba(60, 140, 60, .28);
+            border: none;
             transition: all .2s;
-            display: none;
         }
 
-        .btn-approve:hover {
-            box-shadow: 0 6px 20px rgba(60, 140, 60, .4);
+        .act-btn.primary {
+            background: linear-gradient(135deg, #8ec63f, #b8e04a);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(142, 198, 63, .3);
         }
 
-        .btn-approve.visible {
-            display: block;
+        .act-btn.primary:hover {
+            box-shadow: 0 6px 22px rgba(142, 198, 63, .45);
+            transform: translateY(-1px);
         }
 
-        /* ── Readonly overlay ── */
-        .readonly-note {
-            padding: 10px 14px;
-            border-radius: 12px;
-            margin-bottom: 6px;
-            background: rgba(142, 198, 63, .09);
-            border: 1.5px solid rgba(142, 198, 63, .24);
-            font-size: 12px;
+        .act-btn.secondary {
+            background: rgba(255, 255, 255, .7);
+            color: var(--muted);
+            border: 1.5px solid var(--border);
+        }
+
+        .act-btn.secondary:hover {
+            border-color: var(--a);
             color: var(--b);
-            font-weight: 600;
         }
 
-        /* ── Toast ── */
+        .act-btn.approve {
+            background: linear-gradient(135deg, #4a7a0a, #6da020);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(74, 122, 10, .3);
+        }
+
+        .act-btn.approve:hover {
+            box-shadow: 0 6px 22px rgba(74, 122, 10, .4);
+            transform: translateY(-1px);
+        }
+
+        .act-btn:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* TOAST */
         .toast {
             position: fixed;
-            bottom: 32px;
+            bottom: 24px;
             left: 50%;
-            transform: translateX(-50%) translateY(80px);
-            background: rgba(30, 40, 20, .92);
+            transform: translateX(-50%) translateY(40px);
+            background: rgba(30, 40, 20, .9);
             color: #fff;
-            padding: 12px 22px;
+            padding: 12px 24px;
             border-radius: 14px;
             font-size: 13px;
             font-weight: 700;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, .25);
-            transition: transform .35s var(--ease);
+            transition: transform .3s var(--ease), opacity .3s;
             z-index: 999;
-            white-space: nowrap;
+            opacity: 0;
         }
 
         .toast.show {
             transform: translateX(-50%) translateY(0);
-        }
-
-        /* ── Status banner ── */
-        .status-banner {
-            padding: 14px 18px;
-            border-radius: 14px;
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .status-banner.approved {
-            background: rgba(142, 198, 63, .12);
-            border: 1.5px solid rgba(142, 198, 63, .3);
-        }
-
-        .status-banner.pending {
-            background: rgba(240, 180, 41, .10);
-            border: 1.5px solid rgba(240, 180, 41, .28);
-        }
-
-        .status-banner .icon {
-            font-size: 20px;
-            flex: 0 0 auto;
-        }
-
-        .status-banner .text {
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .status-banner .sub {
-            font-size: 11.5px;
-            margin-top: 2px;
-            color: var(--muted);
+            opacity: 1;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Topbar -->
+    <!-- TOP BAR -->
     <div class="topbar">
-        <div class="topbar-left">
-            <div class="topbar-icon">
-                <svg width="20" height="20" viewBox="0 0 64 64" fill="none">
-                    <path
-                        d="M50 38c0-8.284-6.716-15-15-15a14.96 14.96 0 00-9.47 3.348C24.196 22.56 20.014 20 15.2 20 8.463 20 3 25.373 3 32c0 6.627 5.463 12 12.2 12H49a5 5 0 001-9.88V38z"
-                        fill="white" fill-opacity="0.95" />
-                </svg>
-            </div>
+        <div class="tb-left">
             <div>
-                <div class="topbar-title">Proyectos · Anexo 2</div>
-                <div class="topbar-sub">IAMx · Nube Municipal Inteligente</div>
+                <div class="tb-logo">IAMx · Anexo 2</div>
+                <div class="tb-sub">Formato TecNM · Proyectos de Servicio Social</div>
             </div>
         </div>
-        <div class="topbar-right">
-            <button class="btn-nav" onclick="window.location.href='tablero_control_equipos_comalcalco.html'">←
+        <div class="tb-actions">
+            <button class="btn-back" onclick="window.location.href='tablero_control_equipos_comalcalco.html'">←
                 Tablero</button>
-            <button class="btn-nav" onclick="logout()">Salir</button>
+            <button class="btn-save" onclick="guardarBorrador()">💾 Guardar</button>
         </div>
     </div>
 
-    <div class="wrap">
-
-        <!-- Project tabs -->
-        <div class="proj-tabs" id="projTabs">
-            <button class="ptab active" data-proj="N" onclick="switchProj('N',this)">Proyecto N — Reporte</button>
-            <button class="ptab" data-proj="U" onclick="switchProj('U',this)">Proyecto U — Ventanilla</button>
-            <button class="ptab" data-proj="B" onclick="switchProj('B',this)">Proyecto B — Semáforo</button>
-        </div>
-
-        <!-- Dynamic content -->
-        <div id="proyContent"></div>
-
+    <!-- HERO -->
+    <div class="hero">
+        <h1>Acuerdo de Servicio Social · Anexo 2</h1>
+        <p>Formato oficial TecNM. Los supervisores llenan los campos; el administrador (IAMx) autoriza y aprueba.</p>
     </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+        <button class="tab active" id="tab_N" onclick="switchTab('N')">Proyecto N — Reporte Ciudadano</button>
+        <button class="tab" id="tab_U" onclick="switchTab('U')">Proyecto U — Ventanilla Única</button>
+        <button class="tab" id="tab_B" onclick="switchTab('B')">Proyecto B — Semáforo Inteligente</button>
+    </div>
+
+    <!-- FORMULARIO -->
+    <div id="formArea" style="padding: 0 24px;max-width:900px;margin:0 auto 0;padding-left:0;"></div>
+
+    <!-- ACCIONES -->
+    <div class="actions" id="actionsArea"></div>
 
     <div class="toast" id="toast"></div>
 
     <script>
-        // ── Auth ──────────────────────────────────────────────
-        const sess = sessionStorage.getItem('iamx_session');
-        if (!sess) { window.location.href = 'login.html'; }
-        const USER = JSON.parse(sess || '{}');
-        const IS_ADMIN = USER.role === 'superadmin';
-        const IS_SUP = USER.role === 'supervisor';
-
-        function logout() {
-            sessionStorage.removeItem('iamx_session');
-            window.location.href = 'login.html';
-        }
-
-        // ── Data ──────────────────────────────────────────────
+        /* ── Configuración de proyecto por letra ── */
         const PROJECTS = {
-            N: { label: 'Proyecto N', name: 'Reporte Ciudadano Inteligente', color: '#8ec63f' },
-            U: { label: 'Proyecto U', name: 'Ventanilla Única Digital', color: '#f0b429' },
-            B: { label: 'Proyecto B', name: 'Semáforo Inteligente', color: '#e05252' }
+            N: { name: 'Reporte Ciudadano Inteligente', clave: 'ISS-N-01', creditos: 10, competencia: 'Desarrollo de Sistemas Inteligentes', docentes: ['M.C. Nombre del Asesor Interno 1'], periodoDesarrolla: 'Ago 2025 – Ago 2026', periodoAcredita: 'Feb-Ago 2026' },
+            U: { name: 'Ventanilla Única Digital', clave: 'ISS-U-01', creditos: 10, competencia: 'Gestión Digital de Servicios Municipales', docentes: ['M.C. Nombre del Asesor Interno 2'], periodoDesarrolla: 'Ago 2025 – Ago 2026', periodoAcredita: 'Feb-Ago 2026' },
+            B: { name: 'Semáforo Inteligente', clave: 'ISS-B-01', creditos: 10, competencia: 'Visión Artificial e IoT para Movilidad Urbana', docentes: ['M.C. Nombre del Asesor Interno 3'], periodoDesarrolla: 'Ago 2025 – Ago 2026', periodoAcredita: 'Feb-Ago 2026' }
         };
-
-        const ANNEXO_FIELDS = [
-            {
-                section: 'Datos Generales del Proyecto', fields: [
-                    { id: 'nombre_proyecto', label: 'Nombre del Proyecto', type: 'text' },
-                    { id: 'institucion', label: 'Institución', type: 'text', default: 'Instituto Tecnológico Superior de Comalcalco' },
-                    { id: 'empresa', label: 'Empresa / Organización', type: 'text', default: 'H. Ayuntamiento de Comalcalco' },
-                    { id: 'periodo', label: 'Período de Realización', type: 'text', default: 'Marzo – Agosto 2026' }
-                ]
-            },
-            {
-                section: 'Objetivo General', fields: [
-                    { id: 'objetivo_general', label: 'Objetivo General del Proyecto', type: 'textarea' }
-                ]
-            },
-            {
-                section: 'Objetivos Específicos', fields: [
-                    { id: 'obj_esp_1', label: 'Objetivo Específico 1', type: 'textarea', rows: 2 },
-                    { id: 'obj_esp_2', label: 'Objetivo Específico 2', type: 'textarea', rows: 2 },
-                    { id: 'obj_esp_3', label: 'Objetivo Específico 3', type: 'textarea', rows: 2 }
-                ]
-            },
-            {
-                section: 'Justificación', fields: [
-                    { id: 'justificacion', label: 'Justificación del Proyecto', type: 'textarea', rows: 4 }
-                ]
-            },
-            {
-                section: 'Metas e Indicadores', fields: [
-                    { id: 'meta_1', label: 'Meta 1', type: 'text' },
-                    { id: 'meta_2', label: 'Meta 2', type: 'text' },
-                    { id: 'meta_3', label: 'Meta 3', type: 'text' }
-                ]
-            },
-            {
-                section: 'Actividades y Responsables', fields: [
-                    { id: 'act_f1', label: 'F1 Fundación (Mar 9–20)    · Actividades Clave', type: 'textarea', rows: 2 },
-                    { id: 'act_f2', label: 'F2 MVP (Mar 23–Abr 10)     · Actividades Clave', type: 'textarea', rows: 2 },
-                    { id: 'act_f3', label: 'F3 Construcción (Abr 13–May 22) · Actividades Clave', type: 'textarea', rows: 2 },
-                    { id: 'act_f4', label: 'F4 Integración (May 25–Jun 26)  · Actividades Clave', type: 'textarea', rows: 2 },
-                    { id: 'act_f5', label: 'F5 Campo (Jun 29–Jul 24)   · Actividades Clave', type: 'textarea', rows: 2 },
-                    { id: 'act_f6', label: 'F6 Entrega (Jul 27–Ago 21)  · Actividades Clave', type: 'textarea', rows: 2 }
-                ]
-            },
-            {
-                section: 'Recursos', fields: [
-                    { id: 'rec_humanos', label: 'Recursos Humanos', type: 'textarea', rows: 2 },
-                    { id: 'rec_materiales', label: 'Recursos Materiales', type: 'textarea', rows: 2 },
-                    { id: 'rec_tecn', label: 'Recursos Tecnológicos', type: 'textarea', rows: 2 }
-                ]
-            },
-            {
-                section: 'Impacto Esperado', fields: [
-                    { id: 'impacto', label: 'Impacto Social / Institucional', type: 'textarea', rows: 3 }
-                ]
-            }
+        /* Fases del proyecto */
+        const FASES = [
+            { id: 'F1', modulo: 'Investigación y Arquitectura', horas: 80 },
+            { id: 'F2', modulo: 'Prototipo Inicial', horas: 80 },
+            { id: 'F3', modulo: 'Desarrollo de Módulos', horas: 100 },
+            { id: 'F4', modulo: 'Integración del Sistema', horas: 100 },
+            { id: 'F5', modulo: 'Pruebas y Ajustes', horas: 80 },
+            { id: 'F6', modulo: 'Entrega y Despliegue', horas: 60 }
         ];
+        const TOTAL_HORAS = FASES.reduce((s, f) => s + f.horas, 0);
 
-        function getKey(proj) { return `iamx_anexo2_${proj}`; }
-        function getData(proj) {
-            try { return JSON.parse(localStorage.getItem(getKey(proj)) || '{}'); } catch (e) { return {}; }
+        /* ── Roles y sesión ── */
+        function getCurrentUser() {
+            try { return JSON.parse(sessionStorage.getItem('iamx_session') || '{}'); } catch (e) { return {}; }
+        }
+        const CURUSER = getCurrentUser();
+        if (!CURUSER.username) { window.location.href = 'login.html'; }
+
+        let curProj = 'N';
+
+        function lsKey(proj) { return `iamx_anexo2_${proj}`; }
+
+        function loadData(proj) {
+            try { return JSON.parse(localStorage.getItem(lsKey(proj)) || 'null'); } catch (e) { return null; }
         }
         function saveData(proj, data) {
-            localStorage.setItem(getKey(proj), JSON.stringify(data));
+            localStorage.setItem(lsKey(proj), JSON.stringify(data));
         }
 
-        function getSupervisors() {
-            try { return JSON.parse(localStorage.getItem('iamx_supervisors') || '[]'); } catch (e) { return []; }
-        }
-
-        // ── Render ─────────────────────────────────────────────
-        let currentProj = 'N';
-
-        function switchProj(proj, el) {
-            document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-            currentProj = proj;
-            renderProj(proj);
-        }
-
-        function renderProj(proj) {
+        function getDefault(proj) {
             const p = PROJECTS[proj];
-            const data = getData(proj);
-            const isApproved = data._approved === true;
-            const isPending = data._submitted && !isApproved;
-            const canEdit = IS_ADMIN || (IS_SUP && !isApproved);
+            return {
+                status: 'draft', // draft | pending | approved
+                proyecto: p.name, clave: p.clave, creditos: p.creditos,
+                competencia: p.competencia, docente_ped: p.docentes[0],
+                horas_total: TOTAL_HORAS,
+                periodo_desarrolla: p.periodoDesarrolla, periodo_acredita: p.periodoAcredita,
+                asesor: '',
+                fases: FASES.map(f => ({ id: f.id, modulo: f.modulo, horas: f.horas, competencia_disc: p.competencia })),
+                firmas: {
+                    presidente: { nombre: '', firmado: false, fecha: '' },
+                    secretario: { nombre: '', firmado: false, fecha: '' },
+                    docente_rel: { nombre: '', firmado: false, fecha: '' },
+                    jefe_depto: { nombre: '', firmado: false, fecha: '' },
+                    superadmin: { nombre: '', aprobado: false, fecha: '' }
+                },
+                nota_elabora: ''
+            };
+        }
 
-            const el = document.getElementById('proyContent');
-            el.innerHTML = '';
-
-            // Status banner
-            if (isApproved) {
-                el.innerHTML += `<div class="status-banner approved">
-      <div class="icon">✅</div>
-      <div><div class="text">Anexo 2 autorizado por SuperAdmin</div>
-      <div class="sub">Aprobado el ${data._approvedDate || '—'} · Solo lectura</div></div>
-    </div>`;
-            } else if (isPending) {
-                el.innerHTML += `<div class="status-banner pending">
-      <div class="icon">⏳</div>
-      <div><div class="text">Esperando autorización del Super Admin</div>
-      <div class="sub">Enviado el ${data._submittedDate || '—'}</div></div>
-    </div>`;
-            }
-
-            // Sections
-            ANNEXO_FIELDS.forEach(sec => {
-                const card = document.createElement('div');
-                card.className = 'scard';
-                let fieldsHtml = '';
-
-                sec.fields.forEach(f => {
-                    const val = data[f.id] || f.default || '';
-                    const ro = !canEdit ? 'readonly' : '';
-                    const tag = f.type === 'textarea' ?
-                        `<textarea id="f_${f.id}" rows="${f.rows || 3}" ${ro} placeholder="Ingresa ${f.label.toLowerCase()}…">${val}</textarea>` :
-                        `<input id="f_${f.id}" type="text" ${ro} value="${val}" placeholder="Ingresa ${f.label.toLowerCase()}…"/>`;
-                    fieldsHtml += `<div class="field"><label>${f.label}</label>${tag}</div>`;
-                });
-
-                card.innerHTML = `
-      <div class="scard-head">
-        <div><h2>${sec.section}</h2></div>
-      </div>
-      <div class="scard-body"><div class="field-group">${fieldsHtml}</div></div>
-    `;
-                el.appendChild(card);
+        function switchTab(proj) {
+            curProj = proj;
+            ['N', 'U', 'B'].forEach(p => {
+                document.getElementById('tab_' + p).classList.toggle('active', p === proj);
             });
+            render();
+        }
 
-            // Signatures section
-            const sups = getSupervisors();
-            const sigCard = document.createElement('div');
-            sigCard.className = 'scard';
-            const myId = USER.id || USER.username;
-            let sigsHtml = '';
-            const sigsSup = (data._signatures || {});
+        function statusLabel(s) {
+            if (s === 'approved') return '<span class="status-badge status-approved">✅ Aprobado</span>';
+            if (s === 'pending') return '<span class="status-badge status-pending">⏳ Pendiente de aprobación</span>';
+            return '<span class="status-badge status-draft">📝 Borrador</span>';
+        }
 
-            sups.forEach((s, i) => {
-                const signed = !!sigsSup[s.id];
-                const isMine = IS_SUP && (USER.id === s.id || USER.username === s.username);
-                sigsHtml += `<div class="sig-box">
-      <div class="name">Supervisor ${i + 1}</div>
-      <div class="role">${s.name}</div>
-      <div class="role" style="margin-top:2px;font-size:10.5px">${s.area}</div>
-      ${signed
-                        ? `<div class="sig-signed">✔ Firmado ${sigsSup[s.id]}</div>`
-                        : `<div class="sig-pending">Pendiente de firma</div>`
-                    }
-      ${isMine && !signed && !isApproved
-                        ? `<button class="sig-btn" onclick="firmar('${proj}','${s.id}')">Firmar mi Anexo 2</button>`
-                        : ''
-                    }
-    </div>`;
-            });
+        function render() {
+            const p = PROJECTS[curProj];
+            const data = loadData(curProj) || getDefault(curProj);
+            const isAdmin = CURUSER.role === 'superadmin';
+            const readOnly = data.status === 'approved' && !isAdmin;
+            const ro = readOnly ? 'readonly' : '';
 
-            if (sups.length === 0) {
-                sigsHtml = '<p style="color:var(--muted);font-size:13px;padding:4px 0">No hay supervisores registrados aún.</p>';
-            }
+            let html = `
+        <div class="card">
+          <div class="card-title">Datos Generales del Proyecto</div>
+          ${statusLabel(data.status)}
+          <div class="proj-header">
+            <div class="ph-field">
+              <label class="ph-label">Nombre del Proyecto</label>
+              <input class="ph-input" id="f_nombre" value="${esc(data.proyecto || p.name)}" ${ro}/>
+            </div>
+            <div class="ph-field">
+              <label class="ph-label">Clave y Asignatura (3)</label>
+              <input class="ph-input" id="f_clave" value="${esc(data.clave || p.clave)}" ${ro}/>
+            </div>
+            <div class="ph-field">
+              <label class="ph-label">Créditos (4)</label>
+              <input class="ph-input" id="f_creditos" type="number" value="${data.creditos || 10}" ${ro}/>
+            </div>
+            <div class="ph-field">
+              <label class="ph-label">Competencia Disciplinar (5)</label>
+              <input class="ph-input" id="f_competencia" value="${esc(data.competencia || p.competencia)}" ${ro}/>
+            </div>
+            <div class="ph-field">
+              <label class="ph-label">Docente relacionado con el PED (6)</label>
+              <input class="ph-input" id="f_docente_ped" value="${esc(data.docente_ped || p.docentes[0])}" ${ro}/>
+            </div>
+            <div class="ph-field">
+              <label class="ph-label">Horas Totales (7)</label>
+              <input class="ph-input" id="f_horas" type="number" value="${data.horas_total || TOTAL_HORAS}" readonly/>
+            </div>
+            <div class="ph-field">
+              <label class="ph-label">Periodo en que se Desarrolla (8)</label>
+              <input class="ph-input" id="f_periodo_d" value="${esc(data.periodo_desarrolla || p.periodoDesarrolla)}" ${ro}/>
+            </div>
+            <div class="ph-field">
+              <label class="ph-label">Periodo en que se Acredita (9)</label>
+              <input class="ph-input" id="f_periodo_a" value="${esc(data.periodo_acredita || p.periodoAcredita)}" ${ro}/>
+            </div>
+          </div>
 
-            // Admin signature
-            const adminSigned = !!(data._signatures || {})['superadmin'];
-            sigsHtml += `<div class="sig-box">
-    <div class="name">Super Admin</div>
-    <div class="role">IAMx · Autorización Final</div>
-    ${adminSigned
-                    ? `<div class="sig-signed">✔ Autorizado ${(data._signatures || {})['superadmin']}</div>`
-                    : `<div class="sig-pending">Pendiente autorización</div>`
+          <!-- TABLA DE MÓDULOS / FASES (columnas 3-9) -->
+          <div class="card-title" style="margin-bottom:14px">Desglose por Fase · Módulo (TOTAL ${TOTAL_HORAS} horas)</div>
+          <div style="overflow-x:auto">
+          <table class="anexo-table">
+            <thead>
+              <tr>
+                <th>Fase</th>
+                <th>Módulo / Actividad</th>
+                <th>Competencia Disciplinar (5)</th>
+                <th>Horas (7)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${FASES.map((f, i) => `
+              <tr>
+                <td style="text-align:center;font-weight:800;color:var(--b)">${f.id}</td>
+                <td><input value="${esc(data.fases?.[i]?.modulo || f.modulo)}" ${ro} data-fi="${i}" data-field="modulo" class="fase-input"/></td>
+                <td><input value="${esc(data.fases?.[i]?.competencia_disc || p.competencia)}" ${ro} data-fi="${i}" data-field="competencia_disc" class="fase-input"/></td>
+                <td style="text-align:center"><input type="number" value="${data.fases?.[i]?.horas || f.horas}" ${ro} data-fi="${i}" data-field="horas" class="fase-input" style="text-align:center;width:60px"/></td>
+              </tr>`).join('')}
+              <tr class="total-row">
+                <td colspan="3" class="total-label">TOTAL (10)</td>
+                <td style="text-align:center;font-weight:800;color:var(--b)">${TOTAL_HORAS}</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+
+          <!-- ASESOR -->
+          <div class="asesor-wrap" style="margin-top:20px">
+            <label class="ph-label" style="margin-bottom:8px;display:block">Propuesta de Asesor(es) Interno(s) Dual(es)</label>
+            <textarea class="asesor-input" id="f_asesor" rows="2" ${ro} placeholder="Nombre(s) del/los asesor(es) interno(s)...">${esc(data.asesor || '')}</textarea>
+          </div>
+          <div class="asesor-wrap">
+            <label class="ph-label" style="margin-bottom:8px;display:block">Elabora — Nombre y descripción</label>
+            <input class="asesor-input" id="f_elabora" ${ro} value="${esc(data.nota_elabora || '')}" placeholder="Equipo de supervisores IAMx Comalcalco"/>
+          </div>
+        </div>
+
+        <!-- FIRMAS -->
+        <div class="card">
+          <div class="card-title">Firmas y Autorizaciones</div>
+          <div class="firma-grid">
+            ${firmaItem('presidente', 'Nombre y Firma del (de la) Presidente(a) de Academia (11)', data, readOnly)}
+            ${firmaItem('secretario', 'Nombre y Firma del (de la) Secretario(a) de Academia (12)', data, readOnly)}
+            ${firmaItem('docente_rel', 'Docente(s) Relacionado(s) con el PED (13)', data, readOnly)}
+            ${firmaItem('jefe_depto', 'Nombre y Firma del (de la) Jefe(a) del Departamento (14)', data, readOnly, 'Vo.Bo.')}
+          </div>
+
+          <!-- SUPERADMIN APPROVAL -->
+          <div style="margin-top:28px; padding-top:20px; border-top:1px solid var(--border)">
+            <div class="vobo-title">Autorización — Superadmin IAMx</div>
+            ${data.firmas.superadmin.aprobado
+                    ? `<div class="firma-signed">✅ Aprobado por ${esc(data.firmas.superadmin.nombre)} el ${esc(data.firmas.superadmin.fecha)}</div>`
+                    : isAdmin
+                        ? `<div style="display:flex;gap:10px;margin-top:8px;align-items:center">
+                     <input id="f_admin_nombre" class="ph-input" style="max-width:260px" placeholder="Nombre del autorizante" value="${esc(data.firmas.superadmin.nombre || '')}"/>
+                     <button class="act-btn approve" onclick="adminApprove()">✅ Autorizar y Aprobar</button>
+                   </div>`
+                        : `<div class="firma-label" style="color:var(--muted);font-size:12px;padding:8px 0">Pendiente de autorización del administrador IAMx</div>`
                 }
-    ${IS_ADMIN && !adminSigned
-                    ? `<button class="sig-btn" onclick="aprobarAdmin('${proj}')">Autorizar y Aprobar</button>`
-                    : ''
-                }
-  </div>`;
+          </div>
 
-            sigCard.innerHTML = `
-    <div class="scard-head">
-      <div><h2>Firmas y Autorización</h2>
-      <p>Cada supervisor debe firmar. El SuperAdmin autoriza al final.</p></div>
-      <span class="status-badge ${isApproved ? 'approved' : isPending ? 'pending' : 'draft'}">${isApproved ? 'Aprobado' : isPending ? 'En revisión' : 'Borrador'}</span>
-    </div>
-    <div class="scard-body"><div class="sig-grid">${sigsHtml}</div></div>
-  `;
-            el.appendChild(sigCard);
+          <div class="ccps">
+            <div class="ccp-item">C.c.p. División de Estudios Profesionales.</div>
+            <div class="ccp-item">C.c.p. Subdirección Académica.</div>
+          </div>
+        </div>`;
 
-            // Action buttons
-            if (canEdit) {
-                const actDiv = document.createElement('div');
-                actDiv.className = 'action-bar';
-                actDiv.innerHTML = `
-      <button class="btn-save" onclick="guardar('${proj}')">💾 Guardar borrador</button>
-      ${IS_SUP && !isPending && !isApproved
-                        ? `<button class="btn-save" style="flex:.4;background:linear-gradient(135deg,#3d8b3d,#5fae3c)" onclick="enviarRevision('${proj}')">📤 Enviar a revisión</button>`
-                        : ''
-                    }
-    `;
-                el.appendChild(actDiv);
-            }
-        }
+            document.getElementById('formArea').innerHTML = html;
 
-        function collectData(proj) {
-            const data = getData(proj);
-            ANNEXO_FIELDS.forEach(sec => {
-                sec.fields.forEach(f => {
-                    const el = document.getElementById(`f_${f.id}`);
-                    if (el) data[f.id] = el.value;
+            // Bind phase inputs
+            document.querySelectorAll('.fase-input').forEach(inp => {
+                inp.addEventListener('change', e => {
+                    const fi = +e.target.dataset.fi;
+                    const field = e.target.dataset.field;
+                    const d = loadData(curProj) || getDefault(curProj);
+                    if (!d.fases) d.fases = FASES.map(f => ({ ...f }));
+                    d.fases[fi][field] = e.target.value;
+                    saveData(curProj, d);
                 });
             });
-            return data;
+
+            renderActions(data, isAdmin);
         }
 
-        function guardar(proj) {
-            const data = collectData(proj);
-            data._savedBy = USER.name || USER.username;
-            data._savedDate = new Date().toLocaleDateString('es-MX');
-            saveData(proj, data);
-            showToast('💾 Borrador guardado correctamente');
+        function firmaItem(key, label, data, readOnly, prefix = '') {
+            const f = data.firmas[key];
+            if (f.firmado) return `<div class="firma-item">
+        <div class="firma-signed">✅ ${prefix ? prefix + ' — ' : ''}Firmado: ${esc(f.nombre)}<br><small>${esc(f.fecha)}</small></div>
+        <div class="firma-label">${label}</div>
+      </div>`;
+            // Supervisors can sign their own slot
+            const isSup = CURUSER.role === 'supervisor';
+            const canSign = !readOnly && (isSup || CURUSER.role === 'superadmin');
+            return `<div class="firma-item">
+        <div class="firma-line">
+          <input id="fn_${key}" class="firma-input" placeholder="Nombre completo" value="${esc(f.nombre || '')}" ${readOnly ? 'readonly' : ''}/>
+          ${canSign ? `<button style="margin-top:4px;font-size:10px;padding:2px 8px;border-radius:999px;border:1px solid var(--a);background:transparent;color:var(--b);cursor:pointer;font-weight:700" onclick="firmar('${key}')">Firmar</button>` : ''}
+        </div>
+        <div class="firma-label">${prefix ? prefix + '<br>' : ''} ${label}</div>
+      </div>`;
         }
 
-        function enviarRevision(proj) {
-            const data = collectData(proj);
-            data._submitted = true;
-            data._submittedDate = new Date().toLocaleDateString('es-MX');
-            saveData(proj, data);
-            showToast('📤 Enviado a revisión del SuperAdmin');
-            renderProj(proj);
+        function renderActions(data, isAdmin) {
+            const area = document.getElementById('actionsArea');
+            let btns = '';
+            if (data.status === 'draft') {
+                btns += `<button class="act-btn secondary" onclick="guardarBorrador()">💾 Guardar Borrador</button>`;
+                btns += `<button class="act-btn primary" onclick="enviarRevision()">📤 Enviar a revisión</button>`;
+            } else if (data.status === 'pending') {
+                btns += `<button class="act-btn secondary" onclick="guardarBorrador()">💾 Guardar cambios</button>`;
+                if (isAdmin) btns += `<button class="act-btn approve" onclick="adminApprove()">✅ Autorizar y Aprobar</button>`;
+                else btns += `<span style="font-size:12px;color:var(--muted);padding:10px 0;font-weight:600">⏳ En revisión — pendiente de aprobación del administrador</span>`;
+            } else if (data.status === 'approved') {
+                btns += `<span style="font-size:13px;color:var(--b);font-weight:800;padding:10px 0">✅ Documento aprobado y autorizado</span>`;
+                if (isAdmin) btns += `<button class="act-btn secondary" onclick="revertDraft()">↩ Reabrir para edición</button>`;
+            }
+            area.innerHTML = btns;
         }
 
-        function firmar(proj, supId) {
-            const data = getData(proj);
-            if (!data._signatures) data._signatures = {};
-            data._signatures[supId] = new Date().toLocaleDateString('es-MX');
-            saveData(proj, data);
-            showToast('✅ Firma registrada');
-            renderProj(proj);
+        function collectForm() {
+            const d = loadData(curProj) || getDefault(curProj);
+            const g = id => document.getElementById(id);
+            if (g('f_nombre')) d.proyecto = g('f_nombre').value;
+            if (g('f_clave')) d.clave = g('f_clave').value;
+            if (g('f_creditos')) d.creditos = +g('f_creditos').value;
+            if (g('f_competencia')) d.competencia = g('f_competencia').value;
+            if (g('f_docente_ped')) d.docente_ped = g('f_docente_ped').value;
+            if (g('f_periodo_d')) d.periodo_desarrolla = g('f_periodo_d').value;
+            if (g('f_periodo_a')) d.periodo_acredita = g('f_periodo_a').value;
+            if (g('f_asesor')) d.asesor = g('f_asesor').value;
+            if (g('f_elabora')) d.nota_elabora = g('f_elabora').value;
+            return d;
         }
 
-        function aprobarAdmin(proj) {
-            if (!confirm('¿Autorizar y aprobar definitivamente el Anexo 2 de este proyecto?')) return;
-            const data = getData(proj);
-            if (!data._signatures) data._signatures = {};
-            data._signatures['superadmin'] = new Date().toLocaleDateString('es-MX');
-            data._approved = true;
-            data._approvedDate = new Date().toLocaleDateString('es-MX');
-            saveData(proj, data);
-            showToast('✅ Anexo 2 autorizado y aprobado');
-            renderProj(proj);
+        function guardarBorrador() {
+            const d = collectForm(); saveData(curProj, d); toast('💾 Borrador guardado');
         }
-
-        let _toastT;
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg; t.classList.add('show');
-            clearTimeout(_toastT);
-            _toastT = setTimeout(() => t.classList.remove('show'), 3000);
+        function enviarRevision() {
+            const d = collectForm(); d.status = 'pending'; saveData(curProj, d); render(); toast('📤 Enviado a revisión');
+        }
+        function adminApprove() {
+            const d = collectForm();
+            const nombre = document.getElementById('f_admin_nombre')?.value || CURUSER.name || 'Super Admin IAMx';
+            d.status = 'approved';
+            d.firmas.superadmin = { nombre, aprobado: true, fecha: new Date().toLocaleDateString('es-MX') };
+            saveData(curProj, d); render(); toast('✅ Documento aprobado');
+        }
+        function revertDraft() {
+            const d = loadData(curProj) || getDefault(curProj);
+            d.status = 'draft'; saveData(curProj, d); render(); toast('↩ Reabierto para edición');
+        }
+        function firmar(key) {
+            const nombre = document.getElementById('fn_' + key)?.value?.trim();
+            if (!nombre) { toast('⚠️ Escribe tu nombre antes de firmar'); return; }
+            const d = loadData(curProj) || getDefault(curProj);
+            d.firmas[key] = { nombre, firmado: true, fecha: new Date().toLocaleDateString('es-MX') };
+            saveData(curProj, d); render(); toast('✍️ Firma registrada: ' + nombre);
+        }
+        function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+        let _t;
+        function toast(msg) {
+            const el = document.getElementById('toast');
+            el.textContent = msg; el.classList.add('show');
+            clearTimeout(_t); _t = setTimeout(() => el.classList.remove('show'), 3000);
         }
 
         // Init
-        renderProj('N');
+        render();
     </script>
 </body>
 
