@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <title>IAMx · Panel Administrador</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #e8ebe3;
+            --a: #8ec63f;
+            --b: #5fae3c;
+            --g: #aadc44;
+            --r: #e05252;
+            --y: #f0b429;
+            --text: #1c1f17;
+            --muted: #7a8070;
+            --sans: 'Inter', ui-sans-serif, system-ui;
+            --ease: cubic-bezier(.2, .9, .2, 1);
+            --R: 22px;
+            --R2: 16px;
+            --glass-shadow: 0 8px 40px rgba(100, 120, 80, .13), 0 1.5px 6px rgba(100, 120, 80, .08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: linear-gradient(145deg, #d8e0ce 0%, #e4e9dc 50%, #cdd8c2 100%);
+            min-height: 100dvh;
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top bar */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            padding: 12px 20px;
+            backdrop-filter: blur(22px) saturate(1.4);
+            -webkit-backdrop-filter: blur(22px) saturate(1.4);
+            background: rgba(230, 235, 222, .90);
+            border-bottom: 1.5px solid rgba(180, 195, 160, .28);
+            box-shadow: 0 2px 16px rgba(80, 100, 60, .08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #8ec63f, #c8f000);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(142, 198, 63, .3);
+        }
+
+        .topbar-title h1 {
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: -.3px;
+        }
+
+        .topbar-title p {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .btn-logout {
+            padding: 9px 18px;
+            border-radius: 12px;
+            border: 1.5px solid rgba(160, 175, 140, .35);
+            background: rgba(255, 255, 255, .65);
+            font-family: var(--sans);
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .18s;
+        }
+
+        .btn-logout:hover {
+            color: var(--r);
+            border-color: rgba(224, 82, 82, .35);
+            background: rgba(224, 82, 82, .06);
+        }
+
+        /* Main layout */
+        .wrap {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 24px 16px 100px;
+        }
+
+        /* Stats strip */
+        .stats-strip {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-mini {
+            background: rgba(255, 255, 255, .75);
+            border: 1.5px solid rgba(180, 195, 160, .28);
+            border-radius: var(--R2);
+            backdrop-filter: blur(14px);
+            padding: 14px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .stat-mini .k {
+            font-size: 10.5px;
+            color: var(--muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+
+        .stat-mini .v {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--text);
+            margin-top: 4px;
+            letter-spacing: -1px;
+        }
+
+        .stat-mini .sub {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* Section card */
+        .section-card {
+            background: rgba(255, 255, 255, .75);
+            border: 1.5px solid rgba(180, 195, 160, .28);
+            border-radius: var(--R);
+            backdrop-filter: blur(18px) saturate(1.3);
+            box-shadow: var(--glass-shadow);
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .section-head {
+            padding: 16px 20px 14px;
+            border-bottom: 1.5px solid rgba(160, 175, 140, .20);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-head h2 {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .section-head p {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* Add supervisor form */
+        .form-area {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .field label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            margin-bottom: 7px;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            height: 44px;
+            border-radius: 12px;
+            border: 1.5px solid rgba(160, 175, 140, .35);
+            background: rgba(255, 255, 255, .72);
+            padding: 0 14px;
+            font-family: var(--sans);
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text);
+            outline: none;
+            transition: border-color .18s, box-shadow .18s;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: var(--a);
+            box-shadow: 0 0 0 3px rgba(142, 198, 63, .18);
+        }
+
+        .field input::placeholder {
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        .field select {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .btn-add {
+            height: 48px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #8ec63f, #b8e04a);
+            color: #fff;
+            font-family: var(--sans);
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 18px rgba(142, 198, 63, .32);
+            transition: all .2s;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 28px rgba(142, 198, 63, .45);
+        }
+
+        .btn-add:active {
+            transform: scale(.98);
+        }
+
+        .btn-add:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Supervisor list */
+        .sup-list {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sup-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1.5px solid rgba(180, 195, 160, .25);
+            background: rgba(255, 255, 255, .52);
+            backdrop-filter: blur(8px);
+            transition: background .18s;
+            animation: fadeIn .3s var(--ease) both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .sup-item:hover {
+            background: rgba(255, 255, 255, .78);
+        }
+
+        .sup-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 16px;
+            flex: 0 0 auto;
+            background: linear-gradient(135deg, rgba(142, 198, 63, .2), rgba(200, 240, 0, .12));
+            border: 1.5px solid rgba(142, 198, 63, .3);
+            color: var(--b);
+        }
+
+        .sup-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sup-info .name {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sup-info .meta {
+            font-size: 11.5px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .sup-info .creds {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 4px;
+            font-family: ui-monospace, monospace;
+        }
+
+        .sup-actions {
+            display: flex;
+            gap: 8px;
+            flex: 0 0 auto;
+        }
+
+        .btn-del {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 1.5px solid rgba(224, 82, 82, .28);
+            background: rgba(224, 82, 82, .06);
+            color: var(--r);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .18s;
+            font-size: 16px;
+        }
+
+        .btn-del:hover {
+            background: rgba(224, 82, 82, .14);
+            border-color: var(--r);
+        }
+
+        /* Role badge */
+        .role-pill {
+            padding: 3px 9px;
+            border-radius: 999px;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: .04em;
+        }
+
+        .role-pill.sup {
+            border: 1.5px solid rgba(142, 198, 63, .35);
+            background: rgba(142, 198, 63, .12);
+            color: var(--b);
+        }
+
+        .role-pill.admin {
+            border: 1.5px solid rgba(240, 180, 41, .35);
+            background: rgba(240, 180, 41, .12);
+            color: #a06800;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: rgba(30, 40, 20, .92);
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, .25);
+            transition: transform .35s var(--ease);
+            z-index: 999;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .empty-state .icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top bar -->
+    <div class="topbar">
+        <div class="topbar-left">
+            <div class="admin-badge">⚡</div>
+            <div class="topbar-title">
+                <h1>Panel Administrador</h1>
+                <p>IAMx · Nube Municipal Inteligente</p>
+            </div>
+        </div>
+        <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+    </div>
+
+    <div class="wrap">
+
+        <!-- Stats -->
+        <div class="stats-strip">
+            <div class="stat-mini">
+                <div class="k">Supervisores</div>
+                <div class="v" id="statCount">0</div>
+                <div class="sub">/ 6 máximo</div>
+            </div>
+            <div class="stat-mini">
+                <div class="k">Activos</div>
+                <div class="v" id="statActive">0</div>
+                <div class="sub">con acceso</div>
+            </div>
+            <div class="stat-mini">
+                <div class="k">Disponibles</div>
+                <div class="v" id="statAvail">6</div>
+                <div class="sub">slots libres</div>
+            </div>
+        </div>
+
+        <!-- Agregar supervisor -->
+        <div class="section-card">
+            <div class="section-head">
+                <div>
+                    <h2>Dar de alta supervisor</h2>
+                    <p>Máximo 6 supervisores en el sistema</p>
+                </div>
+            </div>
+            <div class="form-area">
+                <div class="form-row">
+                    <div class="field">
+                        <label for="supName">Nombre completo</label>
+                        <input id="supName" type="text" placeholder="Ej. Juan Pérez López" />
+                    </div>
+                    <div class="field">
+                        <label for="supArea">Área / Equipo</label>
+                        <input id="supArea" type="text" placeholder="Ej. Equipo A – Reporte" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="field">
+                        <label for="supUser">Usuario (login)</label>
+                        <input id="supUser" type="text" placeholder="Ej. supervisor1" autocomplete="off" />
+                    </div>
+                    <div class="field">
+                        <label for="supPass">Contraseña</label>
+                        <input id="supPass" type="text" placeholder="Mín. 8 caracteres" autocomplete="off" />
+                    </div>
+                </div>
+                <button class="btn-add" id="btnAdd" onclick="addSupervisor()">
+                    ＋ Dar de alta supervisor
+                </button>
+            </div>
+        </div>
+
+        <!-- Lista supervisores -->
+        <div class="section-card">
+            <div class="section-head">
+                <div>
+                    <h2>Supervisores registrados</h2>
+                    <p>Gestiona el acceso de cada supervisor</p>
+                </div>
+            </div>
+            <div class="sup-list" id="supList"></div>
+        </div>
+
+        <!-- Info superadmin -->
+        <div class="section-card">
+            <div class="section-head">
+                <div>
+                    <h2>Acceso Super Admin</h2>
+                    <p>Información de la cuenta maestra</p>
+                </div>
+            </div>
+            <div style="padding:16px 20px;">
+                <div class="sup-item">
+                    <div class="sup-avatar">⚡</div>
+                    <div class="sup-info">
+                        <div class="name">Super Admin IAMx</div>
+                        <div class="meta">Acceso total al sistema</div>
+                        <div class="creds">Usuario: iamx</div>
+                    </div>
+                    <div><span class="role-pill admin">SUPERADMIN</span></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ── Verificar sesión ──
+        const sess = sessionStorage.getItem('iamx_session');
+        if (!sess) { window.location.href = 'login.html'; }
+        else {
+            const s = JSON.parse(sess);
+            if (s.role !== 'superadmin') { window.location.href = 'login.html'; }
+        }
+
+        const MAX_SUPS = 6;
+
+        function getSupervisors() {
+            try { return JSON.parse(localStorage.getItem('iamx_supervisors') || '[]'); } catch (e) { return []; }
+        }
+        function saveSupervisors(arr) {
+            localStorage.setItem('iamx_supervisors', JSON.stringify(arr));
+        }
+
+        function renderStats(sups) {
+            document.getElementById('statCount').textContent = sups.length;
+            document.getElementById('statActive').textContent = sups.length;
+            document.getElementById('statAvail').textContent = Math.max(0, MAX_SUPS - sups.length);
+        }
+
+        function renderList() {
+            const sups = getSupervisors();
+            renderStats(sups);
+            const list = document.getElementById('supList');
+            list.innerHTML = '';
+
+            // Toggle add button
+            document.getElementById('btnAdd').disabled = sups.length >= MAX_SUPS;
+
+            if (sups.length === 0) {
+                list.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">👤</div>
+            <div>Aún no hay supervisores registrados.<br>Usa el formulario de arriba para dar de alta.</div>
+          </div>`;
+                return;
+            }
+
+            sups.forEach((s, idx) => {
+                const initials = s.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+                const item = document.createElement('div');
+                item.className = 'sup-item';
+                item.style.animationDelay = `${idx * .06}s`;
+                item.innerHTML = `
+          <div class="sup-avatar">${initials}</div>
+          <div class="sup-info">
+            <div class="name">${s.name}</div>
+            <div class="meta">${s.area}</div>
+            <div class="creds">Usuario: ${s.username} · Clave: ${'•'.repeat(s.password.length)}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="role-pill sup">SUPERVISOR</span>
+            <button class="btn-del" onclick="deleteSupervisor('${s.id}')" title="Eliminar">🗑</button>
+          </div>
+        `;
+                list.appendChild(item);
+            });
+        }
+
+        function addSupervisor() {
+            const name = document.getElementById('supName').value.trim();
+            const area = document.getElementById('supArea').value.trim();
+            const username = document.getElementById('supUser').value.trim();
+            const password = document.getElementById('supPass').value.trim();
+
+            if (!name || !area || !username || !password) { showToast('⚠️ Completa todos los campos'); return; }
+            if (password.length < 8) { showToast('⚠️ La contraseña debe tener al menos 8 caracteres'); return; }
+
+            const sups = getSupervisors();
+            if (sups.length >= MAX_SUPS) { showToast('⛔ Máximo de supervisores alcanzado (6)'); return; }
+            if (sups.find(s => s.username === username)) { showToast('⚠️ Ese usuario ya existe'); return; }
+            if (username === 'iamx') { showToast('⛔ Nombre de usuario reservado'); return; }
+
+            const newSup = {
+                id: `sup_${Date.now()}`,
+                name, area, username, password,
+                createdAt: new Date().toISOString()
+            };
+
+            sups.push(newSup);
+            saveSupervisors(sups);
+
+            // Limpiar form
+            ['supName', 'supArea', 'supUser', 'supPass'].forEach(id => document.getElementById(id).value = '');
+            renderList();
+            showToast(`✅ ${name} dado de alta correctamente`);
+        }
+
+        function deleteSupervisor(id) {
+            if (!confirm('¿Eliminar este supervisor? Perderá acceso de inmediato.')) return;
+            let sups = getSupervisors();
+            const sup = sups.find(s => s.id === id);
+            sups = sups.filter(s => s.id !== id);
+            saveSupervisors(sups);
+            renderList();
+            showToast(`🗑 ${sup?.name || 'Supervisor'} eliminado`);
+        }
+
+        function logout() {
+            sessionStorage.removeItem('iamx_session');
+            window.location.href = 'login.html';
+        }
+
+        let toastTimer;
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        renderList();
+    </script>
+</body>
+
+</html>

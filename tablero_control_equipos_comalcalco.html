@@ -833,6 +833,59 @@
       border-top: 1px solid rgba(160, 175, 140, .20);
       margin: 12px 0
     }
+
+    /* ─── Session bar ─── */
+    .session-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0 0;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 12px 5px 7px;
+      border-radius: 999px;
+      background: rgba(142, 198, 63, .12);
+      border: 1.5px solid rgba(142, 198, 63, .28);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--b);
+    }
+
+    .user-pill .avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #8ec63f, #c8f000);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .btn-signout {
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(160, 175, 140, .30);
+      background: rgba(255, 255, 255, .60);
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .btn-signout:hover {
+      color: #e05252;
+      border-color: rgba(224, 82, 82, .30);
+      background: rgba(224, 82, 82, .06);
+    }
   </style>
 </head>
 
@@ -841,6 +894,15 @@
     <div class="brand">
       <h1>IAMx</h1>
       <div class="sub">Nube Municipal Inteligente - Comalcalco</div>
+    </div>
+    <div class="session-bar">
+      <div class="user-pill" id="userPill">
+        <div class="avatar" id="userAvatar">?</div>
+        <span id="userName">Cargando…</span>
+      </div>
+      <button class="btn-signout" onclick="signOut()">Salir ↗</button>
+    </div>
+    <div class="brand" style="display:none">
     </div>
     <div class="toolbar">
       <div class="search" aria-label="Buscar">
@@ -942,6 +1004,28 @@
   </div>
 
   <script>
+    // ── Protección de sesión ──
+    (function () {
+      const sess = sessionStorage.getItem('iamx_session');
+      if (!sess) { window.location.href = 'login.html'; return; }
+      const s = JSON.parse(sess);
+      if (!s || !s.username) { window.location.href = 'login.html'; }
+    })();
+
+    function signOut() {
+      sessionStorage.removeItem('iamx_session');
+      window.location.href = 'login.html';
+    }
+
+    function initSessionUI() {
+      const sess = sessionStorage.getItem('iamx_session');
+      if (!sess) return;
+      const s = JSON.parse(sess);
+      const initials = s.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+      document.getElementById('userName').textContent = s.name;
+      document.getElementById('userAvatar').textContent = initials;
+    }
+
     const DATA = { "meta": { "title": "Tablero de Control · Comalcalco (3×5)", "version": "v1.0", "generated": "2026-03-04 16:06" }, "projects": [{ "id": "reporte", "name": "Reporte Ciudadano Inteligente", "goal": "Captura → clasificación IA → geolocalización → ticket → estatus → analítica" }, { "id": "ventanilla", "name": "Ventanilla Única Digital", "goal": "Catálogo trámites → formulario → adjuntos → acuse → seguimiento → bitácora" }, { "id": "semaforo", "name": "Semáforo Inteligente", "goal": "Visión (YOLO) + reglas + telemetría IoT + tablero + piloto en modo recomendación" }], "phases": [{ "id": "F1", "name": "Fundación", "weeks": "Sem 1–2", "focus": "Reglas, mapa, arquitectura, prototipo navegable" }, { "id": "F2", "name": "MVP", "weeks": "Sem 3–5", "focus": "Flujo mínimo funcionando + demo" }, { "id": "F3", "name": "Construcción", "weeks": "Sem 6–11", "focus": "Features clave + analítica + robustez" }, { "id": "F4", "name": "Integración + Seguridad", "weeks": "Sem 12–16", "focus": "Roles, auditoría, hardening, fail-safe" }, { "id": "F5", "name": "Campo + Hardening", "weeks": "Sem 17–20", "focus": "Piloto controlado + medición + fixes" }, { "id": "F6", "name": "Piloto + Entrega", "weeks": "Sem 21–24", "focus": "Paquete final, manuales, evidencia, escalamiento" }], "teams": [{ "id": "A", "project": "reporte", "name": "Equipo A", "note": "Cumple 2E + 3S", "members": [{ "name": "José Reyes Hernández Alejandro", "role": "Electrónica", "tags": ["E", "Evidencia/Campo"] }, { "name": "Andrea Morales de la Cruz", "role": "Electrónica", "tags": ["E", "Validación/Campo"] }, { "name": "Gustavo Erick Villeda Domínguez", "role": "Sistemas", "tags": ["S", "Arquitectura/API"] }, { "name": "Angel Eduardo Lara Juárez", "role": "Sistemas", "tags": ["S", "UX/UI"] }, { "name": "Cesar Marquez Sanchez", "role": "Sistemas", "tags": ["S", "Datos/Modelo"] }] }, { "id": "B", "project": "ventanilla", "name": "Equipo B", "note": "Operación con 5 Sistemas (apoyo rotativo 4h/sem recomendado en F3–F4)", "members": [{ "name": "Gabriela Coronel Contreras", "role": "Sistemas", "tags": ["S", "Componentes/Front"] }, { "name": "Brayan del Carmen Cruz Hernández", "role": "Sistemas", "tags": ["S", "UX/Microcopy"] }, { "name": "Gustavo Alexander Solis Jimenez", "role": "Sistemas", "tags": ["S", "Back/Integraciones"] }, { "name": "José Angel Olan de los Santos", "role": "Sistemas", "tags": ["S", "Flujos/Reglas"] }, { "name": "Mariana Izquierdo Hernández", "role": "Sistemas", "tags": ["S", "QA/Pruebas"] }] }, { "id": "C", "project": "semaforo", "name": "Equipo C", "note": "3E + 2S (compensación: 1 perfil Sistemas rotativo 4h/sem del Equipo A o B)", "members": [{ "name": "Lorena Martínez Izquierdo", "role": "Electrónica", "tags": ["E", "Control/Failsafe"] }, { "name": "Angel Gabriel Vazquez de la Cruz", "role": "Electrónica", "tags": ["E", "IoT/Telemetría"] }, { "name": "Paola Estefanía Jiménez Sánchez", "role": "Electrónica", "tags": ["E", "Simulación/HW-SW"] }, { "name": "Alexa Dominguez Castellanos", "role": "Sistemas", "tags": ["S", "Dashboard"] }, { "name": "Isidro de los Remedios Marquez Lopez", "role": "Sistemas", "tags": ["S", "Lógica/Backend"] }] }], "weekly_model": [{ "day": "Lunes (Presencial)", "blocks": [{ "time": "9:00–11:00", "name": "Formación según carrera", "desc": "Aplicación directa al proyecto (tarea técnica del día)" }, { "time": "11:30–13:00", "name": "Sesión con asesor", "desc": "Revisión PRs, bloqueos, decisiones" }, { "time": "13:00–15:00", "name": "Desarrollo", "desc": "Construcción del sprint" }] }, { "day": "Martes (Presencial)", "blocks": [{ "time": "9:00–11:00", "name": "Logística y planeación", "desc": "Sprint planning + asignación" }, { "time": "11:30–15:00", "name": "Desarrollo continuo", "desc": "Implementación + pruebas rápidas" }] }, { "day": "Miércoles (Presencial)", "blocks": [{ "time": "9:00–11:00", "name": "Potencial humano", "desc": "Comunicación, liderazgo, coordinación" }, { "time": "11:30–15:00", "name": "Integración y pruebas", "desc": "Merge, QA, demo interna" }] }, { "day": "Jueves (Presencial)", "blocks": [{ "time": "Bloque 1", "name": "Desarrollo profundo", "desc": "Features grandes + documentación" }, { "time": "Bloque 2", "name": "IA/Optimización", "desc": "Entrenamientos, métricas, performance" }] }, { "day": "Viernes (Presencial)", "blocks": [{ "time": "Bloque 1", "name": "QA + demo grabada", "desc": "Demo 3–5 min + checklist" }, { "time": "Bloque 2", "name": "Reporte semanal", "desc": "KPI, bloqueos, plan próximo lunes" }] }], "tasks": { "reporte": { "F1": [{ "t": "Definir 12 categorías + severidad + SLA base", "w": "Taxonomía operable" }, { "t": "Wireflow móvil (captura/estatus) + panel operador", "w": "Prototipo navegable" }, { "t": "Modelo de datos de ticket (estados, bitácora, adjuntos)", "w": "Schema v1" }, { "t": "Reglas anti-spam + validación mínima", "w": "Política v1" }], "F2": [{ "t": "MVP web móvil con evidencia (compresión + límites)", "w": "Formulario + carga" }, { "t": "Backlog/cola: Nuevo→Validación→Asignado→En proceso→Resuelto→Cerrado", "w": "Workflow" }, { "t": "Notificación confirmación + recordatorios", "w": "Mensajería" }, { "t": "Métricas base + tablero", "w": "KPI v1" }], "F3": [{ "t": "Clasificación IA baseline + evaluación", "w": "Reporte precision/recall" }, { "t": "Mapa por colonia + clustering de reportes", "w": "Heatmap" }, { "t": "Deduplicación y fusión de tickets", "w": "Reglas" }, { "t": "Panel analítica SLA/backlog real", "w": "Dashboard v2" }], "F4": [{ "t": "Roles: ciudadano/operador/supervisor/auditor", "w": "RBAC" }, { "t": "Bitácora inmutable de cambios", "w": "Audit log" }, { "t": "Rate limit + captcha selectivo", "w": "Antiabuso" }, { "t": "Backups + exportación CSV/JSON", "w": "Transparencia" }], "F5": [{ "t": "Piloto con 1–2 áreas + 2 colonias", "w": "Operación real" }, { "t": "Ciclo bug→fix→verificación", "w": "QA loop" }, { "t": "Reporte de aprendizaje", "w": "Insights" }], "F6": [{ "t": "Paquete final: repo + despliegue + checklist", "w": "Entrega técnica" }, { "t": "Demo final 5 min + KPI + plan escalamiento", "w": "Presentación" }, { "t": "Carpeta evidencias piloto + lecciones", "w": "Cierre" }] }, "ventanilla": { "F1": [{ "t": "Seleccionar 3 trámites piloto + mapear proceso actual", "w": "Mapa" }, { "t": "Diseñar estados del expediente y prevenciones", "w": "Workflow" }, { "t": "Estructura de expediente digital", "w": "Carpeta v1" }, { "t": "Acuse digital (folio, QR, resumen)", "w": "Plantilla" }], "F2": [{ "t": "Alta de trámite + adjuntos + folio", "w": "MVP" }, { "t": "Panel operador: cola, filtros, asignación", "w": "Backoffice" }, { "t": "Notificaciones: recibido, prevención, aprobado", "w": "Mensajería" }], "F3": [{ "t": "Plantillas de trámites configurables", "w": "Builder" }, { "t": "Buscador por trámite/estado/fecha", "w": "Search" }, { "t": "Reportes operativos día/semana/mes", "w": "KPIs" }], "F4": [{ "t": "Roles por área + permisos finos", "w": "RBAC" }, { "t": "Bitácora completa del expediente", "w": "Audit log" }, { "t": "Retención/exportación para transparencia", "w": "Compliance" }], "F5": [{ "t": "Piloto con 1–2 direcciones", "w": "Operación" }, { "t": "Medición de tiempos y cuellos de botella", "w": "SLA" }, { "t": "Mejoras rápidas UI/validaciones", "w": "Hardening" }], "F6": [{ "t": "10 trámites configurables + manual configuración", "w": "Escalamiento" }, { "t": "Guía operación por área + capacitación", "w": "Handoff" }, { "t": "Video demo + checklist escalamiento", "w": "Cierre" }] }, "semaforo": { "F1": [{ "t": "Definir intersección piloto y variables (flujo, peatón, emergencia)", "w": "Caso piloto" }, { "t": "Arquitectura: cámara/edge→IA→controlador→telemetría→dashboard", "w": "Blueprint" }, { "t": "Reglas de fases + amarillos + prioridad peatonal", "w": "Reglamento v1" }, { "t": "Simulación base con datos sintéticos", "w": "Sim v1" }], "F2": [{ "t": "YOLO conteo por carril + densidad", "w": "Detector v1" }, { "t": "Reglas de ajuste de tiempos (hora pico/peatón/emergencia)", "w": "Motor reglas" }, { "t": "Dashboard ciclo actual + sugerencias + historial", "w": "UI v1" }], "F3": [{ "t": "LPR baseline (OCR) para demo + eventos por placa", "w": "LPR v1" }, { "t": "Eventos: pasa en rojo, bloqueo, peatón en riesgo", "w": "Eventos v1" }, { "t": "Política de datos: retención y acceso", "w": "Privacidad" }], "F4": [{ "t": "Modo degradado (IA falla→ciclos fijos seguros)", "w": "Fail-safe" }, { "t": "Monitoreo: uptime/temperatura/reinicios/paquetes", "w": "Telemetría" }, { "t": "Hardening: credenciales, cifrado, logs", "w": "Seguridad" }], "F5": [{ "t": "Piloto modo recomendación (no controla luces)", "w": "Campo seguro" }, { "t": "Comparativa ciclo fijo vs sugerido", "w": "Métrica" }, { "t": "Registro de incidentes y ajustes", "w": "QA" }], "F6": [{ "t": "Simulador + dashboard + IA demo reproducible", "w": "Entrega demo" }, { "t": "Documento de piloto (riesgos, operación, escalamiento)", "w": "Handoff" }, { "t": "Checklist instalación real (posterior)", "w": "Plan" }] } } };
     const LS_KEY = "comalcalco_tablero_v1";
     let state = { phase: "F1", done: {} };
@@ -1234,6 +1318,7 @@
     load();
     bindChips();
     renderAll();
+    initSessionUI();
 
     document.getElementById("q").addEventListener("input", (e) => applySearch(e.target.value));
     document.getElementById("btnTop").addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
