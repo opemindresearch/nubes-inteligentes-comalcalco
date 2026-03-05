@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <title>IAMx · Anexo 2 — Proyectos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --a: #8ec63f;
+            --b: #5fae3c;
+            --g: #aadc44;
+            --r: #e05252;
+            --y: #f0b429;
+            --text: #1c1f17;
+            --muted: #7a8070;
+            --sans: 'Inter', ui-sans-serif, system-ui;
+            --ease: cubic-bezier(.2, .9, .2, 1);
+            --R: 20px;
+            --R2: 14px;
+            --glass: 0 8px 40px rgba(100, 120, 80, .13), 0 1.5px 6px rgba(100, 120, 80, .08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: linear-gradient(145deg, #d8e0ce 0%, #e4e9dc 50%, #cdd8c2 100%);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Topbar ── */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            padding: 10px 20px;
+            backdrop-filter: blur(22px) saturate(1.4);
+            -webkit-backdrop-filter: blur(22px) saturate(1.4);
+            background: rgba(230, 235, 222, .92);
+            border-bottom: 1.5px solid rgba(180, 195, 160, .28);
+            box-shadow: 0 2px 16px rgba(80, 100, 60, .08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topbar-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #8ec63f, #c8f000);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 12px rgba(142, 198, 63, .3);
+        }
+
+        .topbar-title {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: -.3px;
+        }
+
+        .topbar-sub {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 1px;
+        }
+
+        .topbar-right {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-nav {
+            padding: 8px 14px;
+            border-radius: 11px;
+            border: 1.5px solid rgba(160, 175, 140, .32);
+            background: rgba(255, 255, 255, .65);
+            font-family: var(--sans);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .18s;
+        }
+
+        .btn-nav:hover {
+            border-color: var(--a);
+            color: var(--b);
+            background: rgba(200, 240, 0, .1);
+        }
+
+        .btn-nav.primary {
+            background: linear-gradient(135deg, #8ec63f, #b8e04a);
+            color: #fff;
+            border: none;
+            box-shadow: 0 3px 12px rgba(142, 198, 63, .3);
+        }
+
+        .btn-nav.primary:hover {
+            box-shadow: 0 5px 18px rgba(142, 198, 63, .45);
+            transform: translateY(-1px);
+        }
+
+        /* ── Layout ── */
+        .wrap {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 24px 16px 100px;
+        }
+
+        /* ── Project tabs ── */
+        .proj-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .proj-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .ptab {
+            padding: 10px 20px;
+            border-radius: 999px;
+            border: 1.5px solid rgba(160, 175, 140, .32);
+            background: rgba(255, 255, 255, .65);
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--muted);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all .18s;
+        }
+
+        .ptab:hover {
+            border-color: var(--a);
+            color: var(--b);
+        }
+
+        .ptab.active {
+            background: linear-gradient(135deg, rgba(142, 198, 63, .18), rgba(200, 240, 0, .12));
+            border-color: var(--a);
+            color: var(--b);
+        }
+
+        /* ── Section card ── */
+        .scard {
+            background: rgba(255, 255, 255, .75);
+            border: 1.5px solid rgba(180, 195, 160, .28);
+            border-radius: var(--R);
+            backdrop-filter: blur(18px) saturate(1.3);
+            -webkit-backdrop-filter: blur(18px) saturate(1.3);
+            box-shadow: var(--glass);
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .scard-head {
+            padding: 14px 20px 12px;
+            border-bottom: 1.5px solid rgba(160, 175, 140, .18);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .scard-head h2 {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .scard-head p {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 10.5px;
+            font-weight: 700;
+            white-space: nowrap;
+            flex: 0 0 auto;
+        }
+
+        .status-badge.pending {
+            background: rgba(240, 180, 41, .12);
+            border: 1.5px solid rgba(240, 180, 41, .3);
+            color: #a06800;
+        }
+
+        .status-badge.approved {
+            background: rgba(142, 198, 63, .12);
+            border: 1.5px solid rgba(142, 198, 63, .3);
+            color: var(--b);
+        }
+
+        .status-badge.draft {
+            background: rgba(120, 128, 112, .1);
+            border: 1.5px solid rgba(120, 128, 112, .25);
+            color: var(--muted);
+        }
+
+        .scard-body {
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* ── Form fields ── */
+        fieldset {
+            border: none;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (max-width: 520px) {
+            .field-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .field label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            margin-bottom: 6px;
+        }
+
+        .field input,
+        .field textarea,
+        .field select {
+            width: 100%;
+            border-radius: 12px;
+            border: 1.5px solid rgba(160, 175, 140, .33);
+            background: rgba(255, 255, 255, .72);
+            padding: 11px 14px;
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            outline: none;
+            transition: border-color .18s, box-shadow .18s;
+        }
+
+        .field textarea {
+            resize: vertical;
+            min-height: 80px;
+            line-height: 1.5;
+        }
+
+        .field input:focus,
+        .field textarea:focus,
+        .field select:focus {
+            border-color: var(--a);
+            box-shadow: 0 0 0 3px rgba(142, 198, 63, .16);
+        }
+
+        .field input::placeholder,
+        .field textarea::placeholder {
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        .field input[readonly],
+        .field textarea[readonly] {
+            background: rgba(240, 243, 236, .6);
+            color: var(--muted);
+            cursor: default;
+        }
+
+        .field select {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        /* ── Signature grid ── */
+        .sig-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .sig-box {
+            border-radius: 12px;
+            border: 1.5px solid rgba(160, 175, 140, .28);
+            background: rgba(255, 255, 255, .52);
+            padding: 12px;
+        }
+
+        .sig-box .name {
+            font-size: 12.5px;
+            font-weight: 700;
+        }
+
+        .sig-box .role {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .sig-box .sig-line {
+            margin-top: 8px;
+            height: 2px;
+            border-radius: 1px;
+            background: rgba(160, 175, 140, .25);
+        }
+
+        .sig-box .sig-signed {
+            margin-top: 8px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(142, 198, 63, .12);
+            border: 1px solid rgba(142, 198, 63, .28);
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--b);
+            text-align: center;
+        }
+
+        .sig-box .sig-pending {
+            margin-top: 8px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(240, 180, 41, .09);
+            border: 1px solid rgba(240, 180, 41, .25);
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #a06800;
+            text-align: center;
+        }
+
+        .sig-btn {
+            margin-top: 8px;
+            width: 100%;
+            padding: 7px;
+            border-radius: 9px;
+            border: none;
+            background: linear-gradient(135deg, #8ec63f, #b8e04a);
+            color: #fff;
+            font-family: var(--sans);
+            font-size: 11.5px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all .18s;
+        }
+
+        .sig-btn:hover {
+            box-shadow: 0 3px 12px rgba(142, 198, 63, .35);
+        }
+
+        .sig-btn:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        /* ── Action bar ── */
+        .action-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .btn-save {
+            flex: 1;
+            min-height: 46px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #8ec63f, #b8e04a);
+            color: #fff;
+            font-family: var(--sans);
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(142, 198, 63, .3);
+            transition: all .2s;
+        }
+
+        .btn-save:hover {
+            box-shadow: 0 6px 22px rgba(142, 198, 63, .45);
+            transform: translateY(-1px);
+        }
+
+        .btn-approve {
+            padding: 0 22px;
+            min-height: 46px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #3d8b3d, #5fae3c);
+            color: #fff;
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(60, 140, 60, .28);
+            transition: all .2s;
+            display: none;
+        }
+
+        .btn-approve:hover {
+            box-shadow: 0 6px 20px rgba(60, 140, 60, .4);
+        }
+
+        .btn-approve.visible {
+            display: block;
+        }
+
+        /* ── Readonly overlay ── */
+        .readonly-note {
+            padding: 10px 14px;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            background: rgba(142, 198, 63, .09);
+            border: 1.5px solid rgba(142, 198, 63, .24);
+            font-size: 12px;
+            color: var(--b);
+            font-weight: 600;
+        }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: rgba(30, 40, 20, .92);
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, .25);
+            transition: transform .35s var(--ease);
+            z-index: 999;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ── Status banner ── */
+        .status-banner {
+            padding: 14px 18px;
+            border-radius: 14px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-banner.approved {
+            background: rgba(142, 198, 63, .12);
+            border: 1.5px solid rgba(142, 198, 63, .3);
+        }
+
+        .status-banner.pending {
+            background: rgba(240, 180, 41, .10);
+            border: 1.5px solid rgba(240, 180, 41, .28);
+        }
+
+        .status-banner .icon {
+            font-size: 20px;
+            flex: 0 0 auto;
+        }
+
+        .status-banner .text {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .status-banner .sub {
+            font-size: 11.5px;
+            margin-top: 2px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="topbar-left">
+            <div class="topbar-icon">
+                <svg width="20" height="20" viewBox="0 0 64 64" fill="none">
+                    <path
+                        d="M50 38c0-8.284-6.716-15-15-15a14.96 14.96 0 00-9.47 3.348C24.196 22.56 20.014 20 15.2 20 8.463 20 3 25.373 3 32c0 6.627 5.463 12 12.2 12H49a5 5 0 001-9.88V38z"
+                        fill="white" fill-opacity="0.95" />
+                </svg>
+            </div>
+            <div>
+                <div class="topbar-title">Proyectos · Anexo 2</div>
+                <div class="topbar-sub">IAMx · Nube Municipal Inteligente</div>
+            </div>
+        </div>
+        <div class="topbar-right">
+            <button class="btn-nav" onclick="window.location.href='tablero_control_equipos_comalcalco.html'">←
+                Tablero</button>
+            <button class="btn-nav" onclick="logout()">Salir</button>
+        </div>
+    </div>
+
+    <div class="wrap">
+
+        <!-- Project tabs -->
+        <div class="proj-tabs" id="projTabs">
+            <button class="ptab active" data-proj="N" onclick="switchProj('N',this)">Proyecto N — Reporte</button>
+            <button class="ptab" data-proj="U" onclick="switchProj('U',this)">Proyecto U — Ventanilla</button>
+            <button class="ptab" data-proj="B" onclick="switchProj('B',this)">Proyecto B — Semáforo</button>
+        </div>
+
+        <!-- Dynamic content -->
+        <div id="proyContent"></div>
+
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ── Auth ──────────────────────────────────────────────
+        const sess = sessionStorage.getItem('iamx_session');
+        if (!sess) { window.location.href = 'login.html'; }
+        const USER = JSON.parse(sess || '{}');
+        const IS_ADMIN = USER.role === 'superadmin';
+        const IS_SUP = USER.role === 'supervisor';
+
+        function logout() {
+            sessionStorage.removeItem('iamx_session');
+            window.location.href = 'login.html';
+        }
+
+        // ── Data ──────────────────────────────────────────────
+        const PROJECTS = {
+            N: { label: 'Proyecto N', name: 'Reporte Ciudadano Inteligente', color: '#8ec63f' },
+            U: { label: 'Proyecto U', name: 'Ventanilla Única Digital', color: '#f0b429' },
+            B: { label: 'Proyecto B', name: 'Semáforo Inteligente', color: '#e05252' }
+        };
+
+        const ANNEXO_FIELDS = [
+            {
+                section: 'Datos Generales del Proyecto', fields: [
+                    { id: 'nombre_proyecto', label: 'Nombre del Proyecto', type: 'text' },
+                    { id: 'institucion', label: 'Institución', type: 'text', default: 'Instituto Tecnológico Superior de Comalcalco' },
+                    { id: 'empresa', label: 'Empresa / Organización', type: 'text', default: 'H. Ayuntamiento de Comalcalco' },
+                    { id: 'periodo', label: 'Período de Realización', type: 'text', default: 'Marzo – Agosto 2026' }
+                ]
+            },
+            {
+                section: 'Objetivo General', fields: [
+                    { id: 'objetivo_general', label: 'Objetivo General del Proyecto', type: 'textarea' }
+                ]
+            },
+            {
+                section: 'Objetivos Específicos', fields: [
+                    { id: 'obj_esp_1', label: 'Objetivo Específico 1', type: 'textarea', rows: 2 },
+                    { id: 'obj_esp_2', label: 'Objetivo Específico 2', type: 'textarea', rows: 2 },
+                    { id: 'obj_esp_3', label: 'Objetivo Específico 3', type: 'textarea', rows: 2 }
+                ]
+            },
+            {
+                section: 'Justificación', fields: [
+                    { id: 'justificacion', label: 'Justificación del Proyecto', type: 'textarea', rows: 4 }
+                ]
+            },
+            {
+                section: 'Metas e Indicadores', fields: [
+                    { id: 'meta_1', label: 'Meta 1', type: 'text' },
+                    { id: 'meta_2', label: 'Meta 2', type: 'text' },
+                    { id: 'meta_3', label: 'Meta 3', type: 'text' }
+                ]
+            },
+            {
+                section: 'Actividades y Responsables', fields: [
+                    { id: 'act_f1', label: 'F1 Fundación (Mar 9–20)    · Actividades Clave', type: 'textarea', rows: 2 },
+                    { id: 'act_f2', label: 'F2 MVP (Mar 23–Abr 10)     · Actividades Clave', type: 'textarea', rows: 2 },
+                    { id: 'act_f3', label: 'F3 Construcción (Abr 13–May 22) · Actividades Clave', type: 'textarea', rows: 2 },
+                    { id: 'act_f4', label: 'F4 Integración (May 25–Jun 26)  · Actividades Clave', type: 'textarea', rows: 2 },
+                    { id: 'act_f5', label: 'F5 Campo (Jun 29–Jul 24)   · Actividades Clave', type: 'textarea', rows: 2 },
+                    { id: 'act_f6', label: 'F6 Entrega (Jul 27–Ago 21)  · Actividades Clave', type: 'textarea', rows: 2 }
+                ]
+            },
+            {
+                section: 'Recursos', fields: [
+                    { id: 'rec_humanos', label: 'Recursos Humanos', type: 'textarea', rows: 2 },
+                    { id: 'rec_materiales', label: 'Recursos Materiales', type: 'textarea', rows: 2 },
+                    { id: 'rec_tecn', label: 'Recursos Tecnológicos', type: 'textarea', rows: 2 }
+                ]
+            },
+            {
+                section: 'Impacto Esperado', fields: [
+                    { id: 'impacto', label: 'Impacto Social / Institucional', type: 'textarea', rows: 3 }
+                ]
+            }
+        ];
+
+        function getKey(proj) { return `iamx_anexo2_${proj}`; }
+        function getData(proj) {
+            try { return JSON.parse(localStorage.getItem(getKey(proj)) || '{}'); } catch (e) { return {}; }
+        }
+        function saveData(proj, data) {
+            localStorage.setItem(getKey(proj), JSON.stringify(data));
+        }
+
+        function getSupervisors() {
+            try { return JSON.parse(localStorage.getItem('iamx_supervisors') || '[]'); } catch (e) { return []; }
+        }
+
+        // ── Render ─────────────────────────────────────────────
+        let currentProj = 'N';
+
+        function switchProj(proj, el) {
+            document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            currentProj = proj;
+            renderProj(proj);
+        }
+
+        function renderProj(proj) {
+            const p = PROJECTS[proj];
+            const data = getData(proj);
+            const isApproved = data._approved === true;
+            const isPending = data._submitted && !isApproved;
+            const canEdit = IS_ADMIN || (IS_SUP && !isApproved);
+
+            const el = document.getElementById('proyContent');
+            el.innerHTML = '';
+
+            // Status banner
+            if (isApproved) {
+                el.innerHTML += `<div class="status-banner approved">
+      <div class="icon">✅</div>
+      <div><div class="text">Anexo 2 autorizado por SuperAdmin</div>
+      <div class="sub">Aprobado el ${data._approvedDate || '—'} · Solo lectura</div></div>
+    </div>`;
+            } else if (isPending) {
+                el.innerHTML += `<div class="status-banner pending">
+      <div class="icon">⏳</div>
+      <div><div class="text">Esperando autorización del Super Admin</div>
+      <div class="sub">Enviado el ${data._submittedDate || '—'}</div></div>
+    </div>`;
+            }
+
+            // Sections
+            ANNEXO_FIELDS.forEach(sec => {
+                const card = document.createElement('div');
+                card.className = 'scard';
+                let fieldsHtml = '';
+
+                sec.fields.forEach(f => {
+                    const val = data[f.id] || f.default || '';
+                    const ro = !canEdit ? 'readonly' : '';
+                    const tag = f.type === 'textarea' ?
+                        `<textarea id="f_${f.id}" rows="${f.rows || 3}" ${ro} placeholder="Ingresa ${f.label.toLowerCase()}…">${val}</textarea>` :
+                        `<input id="f_${f.id}" type="text" ${ro} value="${val}" placeholder="Ingresa ${f.label.toLowerCase()}…"/>`;
+                    fieldsHtml += `<div class="field"><label>${f.label}</label>${tag}</div>`;
+                });
+
+                card.innerHTML = `
+      <div class="scard-head">
+        <div><h2>${sec.section}</h2></div>
+      </div>
+      <div class="scard-body"><div class="field-group">${fieldsHtml}</div></div>
+    `;
+                el.appendChild(card);
+            });
+
+            // Signatures section
+            const sups = getSupervisors();
+            const sigCard = document.createElement('div');
+            sigCard.className = 'scard';
+            const myId = USER.id || USER.username;
+            let sigsHtml = '';
+            const sigsSup = (data._signatures || {});
+
+            sups.forEach((s, i) => {
+                const signed = !!sigsSup[s.id];
+                const isMine = IS_SUP && (USER.id === s.id || USER.username === s.username);
+                sigsHtml += `<div class="sig-box">
+      <div class="name">Supervisor ${i + 1}</div>
+      <div class="role">${s.name}</div>
+      <div class="role" style="margin-top:2px;font-size:10.5px">${s.area}</div>
+      ${signed
+                        ? `<div class="sig-signed">✔ Firmado ${sigsSup[s.id]}</div>`
+                        : `<div class="sig-pending">Pendiente de firma</div>`
+                    }
+      ${isMine && !signed && !isApproved
+                        ? `<button class="sig-btn" onclick="firmar('${proj}','${s.id}')">Firmar mi Anexo 2</button>`
+                        : ''
+                    }
+    </div>`;
+            });
+
+            if (sups.length === 0) {
+                sigsHtml = '<p style="color:var(--muted);font-size:13px;padding:4px 0">No hay supervisores registrados aún.</p>';
+            }
+
+            // Admin signature
+            const adminSigned = !!(data._signatures || {})['superadmin'];
+            sigsHtml += `<div class="sig-box">
+    <div class="name">Super Admin</div>
+    <div class="role">IAMx · Autorización Final</div>
+    ${adminSigned
+                    ? `<div class="sig-signed">✔ Autorizado ${(data._signatures || {})['superadmin']}</div>`
+                    : `<div class="sig-pending">Pendiente autorización</div>`
+                }
+    ${IS_ADMIN && !adminSigned
+                    ? `<button class="sig-btn" onclick="aprobarAdmin('${proj}')">Autorizar y Aprobar</button>`
+                    : ''
+                }
+  </div>`;
+
+            sigCard.innerHTML = `
+    <div class="scard-head">
+      <div><h2>Firmas y Autorización</h2>
+      <p>Cada supervisor debe firmar. El SuperAdmin autoriza al final.</p></div>
+      <span class="status-badge ${isApproved ? 'approved' : isPending ? 'pending' : 'draft'}">${isApproved ? 'Aprobado' : isPending ? 'En revisión' : 'Borrador'}</span>
+    </div>
+    <div class="scard-body"><div class="sig-grid">${sigsHtml}</div></div>
+  `;
+            el.appendChild(sigCard);
+
+            // Action buttons
+            if (canEdit) {
+                const actDiv = document.createElement('div');
+                actDiv.className = 'action-bar';
+                actDiv.innerHTML = `
+      <button class="btn-save" onclick="guardar('${proj}')">💾 Guardar borrador</button>
+      ${IS_SUP && !isPending && !isApproved
+                        ? `<button class="btn-save" style="flex:.4;background:linear-gradient(135deg,#3d8b3d,#5fae3c)" onclick="enviarRevision('${proj}')">📤 Enviar a revisión</button>`
+                        : ''
+                    }
+    `;
+                el.appendChild(actDiv);
+            }
+        }
+
+        function collectData(proj) {
+            const data = getData(proj);
+            ANNEXO_FIELDS.forEach(sec => {
+                sec.fields.forEach(f => {
+                    const el = document.getElementById(`f_${f.id}`);
+                    if (el) data[f.id] = el.value;
+                });
+            });
+            return data;
+        }
+
+        function guardar(proj) {
+            const data = collectData(proj);
+            data._savedBy = USER.name || USER.username;
+            data._savedDate = new Date().toLocaleDateString('es-MX');
+            saveData(proj, data);
+            showToast('💾 Borrador guardado correctamente');
+        }
+
+        function enviarRevision(proj) {
+            const data = collectData(proj);
+            data._submitted = true;
+            data._submittedDate = new Date().toLocaleDateString('es-MX');
+            saveData(proj, data);
+            showToast('📤 Enviado a revisión del SuperAdmin');
+            renderProj(proj);
+        }
+
+        function firmar(proj, supId) {
+            const data = getData(proj);
+            if (!data._signatures) data._signatures = {};
+            data._signatures[supId] = new Date().toLocaleDateString('es-MX');
+            saveData(proj, data);
+            showToast('✅ Firma registrada');
+            renderProj(proj);
+        }
+
+        function aprobarAdmin(proj) {
+            if (!confirm('¿Autorizar y aprobar definitivamente el Anexo 2 de este proyecto?')) return;
+            const data = getData(proj);
+            if (!data._signatures) data._signatures = {};
+            data._signatures['superadmin'] = new Date().toLocaleDateString('es-MX');
+            data._approved = true;
+            data._approvedDate = new Date().toLocaleDateString('es-MX');
+            saveData(proj, data);
+            showToast('✅ Anexo 2 autorizado y aprobado');
+            renderProj(proj);
+        }
+
+        let _toastT;
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.classList.add('show');
+            clearTimeout(_toastT);
+            _toastT = setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // Init
+        renderProj('N');
+    </script>
+</body>
+
+</html>
