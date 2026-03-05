@@ -1,0 +1,1252 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#e8ebe3">
+  <title>NUBE</title>
+  <style>
+    /* ─── Google Font ─── */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    :root {
+      /* ── Palette inspirada en la imagen (fondo sage-verdoso, cards vidrio blanco) */
+      --bg: #e8ebe3;
+      --surface: rgba(255, 255, 255, 0.82);
+      --surface2: rgba(255, 255, 255, 0.55);
+      --card: rgba(255, 255, 255, 0.75);
+      --text: #1c1f17;
+      --muted: #7a8070;
+      --border: rgba(180, 190, 170, 0.38);
+      --border2: rgba(160, 172, 148, 0.45);
+
+      /* Accent: lime-verde eléctrico como en la imagen */
+      --a: #8ec63f;
+      /* lime principal */
+      --b: #5fae3c;
+      /* verde oscuro */
+      --g: #aadc44;
+      /* lime brillante */
+      --y: #f0b429;
+      /* amber */
+      --r: #e05252;
+      /* rojo suave */
+      --lime: #c8f000;
+      /* acento neón suave */
+
+      /* Shadows difusos y suaves */
+      --shadow: 0 8px 32px rgba(80, 100, 60, .10), 0 2px 8px rgba(80, 100, 60, .07);
+      --shadow2: 0 2px 14px rgba(80, 100, 60, .08), 0 1px 4px rgba(80, 100, 60, .05);
+      --glass-shadow: 0 8px 40px rgba(100, 120, 80, .13), 0 1.5px 6px rgba(100, 120, 80, .08);
+
+      /* Border radii más generosos */
+      --R: 22px;
+      --R2: 16px;
+
+      /* Misc */
+      --tap: 44px;
+      --max: 520px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --ease: cubic-bezier(.2, .9, .2, 1);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background: linear-gradient(145deg, #e4e9dc 0%, #eaeddf 40%, #dde5d2 100%);
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+
+    /* ─── Layout wrapper ─── */
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: calc(10px + env(safe-area-inset-top)) 14px calc(110px + env(safe-area-inset-bottom));
+    }
+
+    /* ─── Sticky top bar ─── */
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      margin: 0 -14px;
+      padding: 10px 14px 10px;
+      backdrop-filter: blur(22px) saturate(1.4);
+      -webkit-backdrop-filter: blur(22px) saturate(1.4);
+      background: rgba(230, 235, 222, .88);
+      border-bottom: 1px solid rgba(180, 190, 160, .25);
+      box-shadow: 0 2px 16px rgba(80, 100, 60, .08);
+    }
+
+    .brand {
+      text-align: center;
+      padding: 6px 0 8px
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -.3px;
+      background: linear-gradient(135deg, #3d4a2a 0%, #6a8030 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .brand .sub {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.3
+    }
+
+    /* ─── Toolbar ─── */
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px
+    }
+
+    .search {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 42px;
+      padding: 9px 13px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(160, 175, 140, .35);
+      background: rgba(255, 255, 255, .72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 2px 12px rgba(80, 100, 60, .09);
+      transition: border-color .18s, box-shadow .18s;
+    }
+
+    .search:focus-within {
+      border-color: var(--a);
+      box-shadow: 0 0 0 3px rgba(142, 198, 63, .18), 0 2px 12px rgba(80, 100, 60, .09);
+    }
+
+    .search input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .search input::placeholder {
+      color: var(--muted);
+      font-weight: 400
+    }
+
+    .iconBtn {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      border: 1.5px solid rgba(160, 175, 140, .35);
+      background: rgba(255, 255, 255, .72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: var(--muted);
+      box-shadow: 0 2px 12px rgba(80, 100, 60, .09);
+      cursor: pointer;
+      user-select: none;
+      display: grid;
+      place-items: center;
+      transition: background .15s, border-color .15s, color .15s;
+    }
+
+    .iconBtn:hover {
+      background: rgba(200, 240, 0, .18);
+      border-color: var(--a);
+      color: var(--b)
+    }
+
+    .iconBtn:active {
+      transform: scale(.97)
+    }
+
+    /* ─── Filter chips ─── */
+    .chips {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .chips::-webkit-scrollbar {
+      display: none
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 36px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      user-select: none;
+      border: 1.5px solid rgba(160, 175, 140, .35);
+      background: rgba(255, 255, 255, .68);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(80, 100, 60, .08);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .1px;
+      white-space: nowrap;
+      transition: all .18s;
+    }
+
+    .chip:hover {
+      border-color: var(--a);
+      background: rgba(200, 240, 0, .14);
+      color: var(--b)
+    }
+
+    .chip[data-active="true"] {
+      border-color: var(--a);
+      background: rgba(142, 198, 63, .14);
+      color: var(--b);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--g), var(--b));
+    }
+
+    /* ─── Section cards ─── */
+    .card {
+      margin-top: 12px;
+      border-radius: var(--R);
+      background: rgba(255, 255, 255, 0.72);
+      border: 1.5px solid rgba(180, 195, 160, .30);
+      box-shadow: var(--glass-shadow);
+      backdrop-filter: blur(18px) saturate(1.3);
+      -webkit-backdrop-filter: blur(18px) saturate(1.3);
+      overflow: hidden;
+      transition: box-shadow .2s;
+    }
+
+    .card:hover {
+      box-shadow: 0 12px 48px rgba(80, 100, 60, .15), 0 2px 8px rgba(80, 100, 60, .08);
+    }
+
+    .cardH {
+      padding: 14px 16px 12px;
+      border-bottom: 1.5px solid rgba(160, 175, 140, .22);
+    }
+
+    .cardH h2 {
+      margin: 0;
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700
+    }
+
+    .cardH p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4
+    }
+
+    /* ─── Stats grid ─── */
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 14px
+    }
+
+    .stat {
+      border-radius: var(--R2);
+      background: rgba(255, 255, 255, .60);
+      border: 1.5px solid rgba(180, 195, 160, .28);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 13px;
+      box-shadow: 0 2px 14px rgba(80, 100, 60, .09);
+      min-height: 84px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: box-shadow .18s, background .18s;
+    }
+
+    .stat:hover {
+      background: rgba(255, 255, 255, .82);
+      box-shadow: 0 6px 24px rgba(80, 100, 60, .13);
+    }
+
+    .stat .k {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em
+    }
+
+    .stat .v {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 8px
+    }
+
+    .stat .v b {
+      font-size: 20px;
+      letter-spacing: -.3px;
+      font-weight: 800;
+      color: var(--text)
+    }
+
+    .pill {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(142, 198, 63, .3);
+      background: rgba(200, 240, 0, .12);
+      width: max-content;
+      color: var(--b);
+      font-weight: 700;
+    }
+
+    /* ─── Progress bars ─── */
+    .progressWrap {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .barRow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px
+    }
+
+    .barRow .label {
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--text)
+    }
+
+    .barRow .pct {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .track {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(160, 175, 140, .25);
+      background: rgba(255, 255, 255, .45);
+    }
+
+    .fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #8ec63f, #c8f000);
+      transition: width .4s var(--ease);
+    }
+
+    /* ─── Info boxes ─── */
+    .sectionPad {
+      padding: 14px
+    }
+
+    .box {
+      border-radius: var(--R2);
+      border: 1.5px solid rgba(180, 195, 160, .28);
+      background: rgba(255, 255, 255, .58);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 13px;
+      box-shadow: 0 2px 14px rgba(80, 100, 60, .08);
+    }
+
+    .box h3 {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -.1px;
+      color: var(--text)
+    }
+
+    .box p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4
+    }
+
+    /* ─── Team accordion ─── */
+    .team {
+      border-radius: var(--R);
+      border: 1.5px solid rgba(180, 195, 160, .28);
+      background: rgba(255, 255, 255, .72);
+      backdrop-filter: blur(18px) saturate(1.3);
+      -webkit-backdrop-filter: blur(18px) saturate(1.3);
+      overflow: hidden;
+      box-shadow: var(--glass-shadow);
+      margin-bottom: 12px;
+      transition: box-shadow .2s, background .2s;
+    }
+
+    .team:hover {
+      background: rgba(255, 255, 255, .88);
+      box-shadow: 0 10px 40px rgba(80, 100, 60, .14);
+    }
+
+    .teamH {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 13px;
+      cursor: pointer;
+      user-select: none;
+      background: transparent;
+    }
+
+    .badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 15px;
+      background: linear-gradient(135deg, rgba(142, 198, 63, .22), rgba(200, 240, 0, .15));
+      border: 1.5px solid rgba(142, 198, 63, .35);
+      color: var(--b);
+    }
+
+    .badge.a {
+      background: linear-gradient(135deg, rgba(170, 220, 68, .22), rgba(142, 198, 63, .15));
+      border-color: rgba(142, 198, 63, .35);
+      color: var(--b)
+    }
+
+    .badge.b {
+      background: linear-gradient(135deg, rgba(245, 158, 11, .14), rgba(240, 180, 41, .10));
+      border-color: rgba(245, 158, 11, .30);
+      color: var(--y)
+    }
+
+    .badge.c {
+      background: linear-gradient(135deg, rgba(224, 82, 82, .12), rgba(239, 68, 68, .08));
+      border-color: rgba(224, 82, 82, .28);
+      color: var(--r)
+    }
+
+    .teamTitle h3 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text)
+    }
+
+    .teamTitle .meta {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35
+    }
+
+    .teamRight {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .tag {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border2);
+      background: var(--surface2);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .chev {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid rgba(160, 175, 140, .30);
+      background: rgba(255, 255, 255, .55);
+      backdrop-filter: blur(6px);
+      transition: transform .28s var(--ease), background .15s;
+    }
+
+    .teamH:hover .chev {
+      background: rgba(200, 240, 0, .18)
+    }
+
+    .team[data-open="true"] .chev {
+      transform: rotate(180deg)
+    }
+
+    .teamB {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .55s var(--ease);
+      border-top: 1.5px solid rgba(160, 175, 140, .22);
+    }
+
+    .team[data-open="true"] .teamB {
+      max-height: 5000px
+    }
+
+    /* ─── Members ─── */
+    .memberGrid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      padding: 12px
+    }
+
+    .member {
+      border-radius: 13px;
+      border: 1.5px solid rgba(180, 195, 160, .25);
+      background: rgba(255, 255, 255, .52);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 11px;
+      transition: background .18s;
+    }
+
+    .member:hover {
+      background: rgba(255, 255, 255, .78);
+    }
+
+    .mTop {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px
+    }
+
+    .mName {
+      font-weight: 700;
+      font-size: 12.5px;
+      line-height: 1.25;
+      color: var(--text)
+    }
+
+    .mTags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: flex-end
+    }
+
+    .mTags span {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(142, 198, 63, .28);
+      background: rgba(200, 240, 0, .10);
+      color: var(--b);
+      font-weight: 600;
+    }
+
+    /* ─── Todo items ─── */
+    .todo {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px
+    }
+
+    .todoItem {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 11px;
+      border-radius: 12px;
+      border: 1.5px solid rgba(180, 195, 160, .25);
+      background: rgba(255, 255, 255, .52);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: border-color .15s, background .15s;
+    }
+
+    .todoItem:hover {
+      border-color: var(--a);
+      background: rgba(200, 240, 0, .12)
+    }
+
+    .ck {
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+      border: 1.5px solid rgba(160, 175, 140, .38);
+      background: rgba(255, 255, 255, .60);
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      transition: all .18s;
+      cursor: pointer;
+    }
+
+    .ck[data-on="true"] {
+      border-color: var(--a);
+      background: rgba(142, 198, 63, .22);
+    }
+
+    .todoText b {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text)
+    }
+
+    .todoText span {
+      display: block;
+      margin-top: 4px;
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.35
+    }
+
+    /* ─── Phase strip ─── */
+    .phaseStrip {
+      display: flex;
+      gap: 8px;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 0 12px 12px;
+    }
+
+    .phaseStrip::-webkit-scrollbar {
+      display: none
+    }
+
+    .phaseBtn {
+      min-width: 86px;
+      padding: 10px;
+      border-radius: 14px;
+      cursor: pointer;
+      user-select: none;
+      border: 1.5px solid rgba(160, 175, 140, .30);
+      background: rgba(255, 255, 255, .58);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(80, 100, 60, .08);
+      transition: all .18s;
+    }
+
+    .phaseBtn:hover {
+      border-color: var(--a);
+      background: rgba(200, 240, 0, .14)
+    }
+
+    .phaseBtn[data-on="true"] {
+      border-color: var(--a);
+      background: rgba(142, 198, 63, .14)
+    }
+
+    .phaseBtn .k {
+      font-family: var(--mono);
+      font-weight: 800;
+      font-size: 11px;
+      color: var(--text)
+    }
+
+    .phaseBtn .t {
+      margin-top: 5px;
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    /* ─── Weekly table ─── */
+    .tableLite {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px
+    }
+
+    .rowLite {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1.5px solid rgba(180, 195, 160, .25);
+      background: rgba(255, 255, 255, .52);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: background .18s;
+    }
+
+    .rowLite:hover {
+      background: rgba(255, 255, 255, .78);
+    }
+
+    .rowLite b {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text)
+    }
+
+    .rowLite span {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    /* ─── Bottom bar ─── */
+    .bottom {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 60;
+      padding: 10px 14px calc(12px + env(safe-area-inset-bottom));
+      backdrop-filter: blur(24px) saturate(1.5);
+      -webkit-backdrop-filter: blur(24px) saturate(1.5);
+      background: rgba(220, 228, 210, .90);
+      border-top: 1px solid rgba(160, 175, 140, .25);
+      box-shadow: 0 -4px 24px rgba(80, 100, 60, .10);
+    }
+
+    .bottomIn {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .btn {
+      flex: 1;
+      min-height: var(--tap);
+      border-radius: 14px;
+      border: 1.5px solid rgba(142, 198, 63, .38);
+      background: linear-gradient(135deg, rgba(142, 198, 63, .20) 0%, rgba(200, 240, 0, .14) 100%);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--b);
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: .1px;
+      box-shadow: 0 2px 12px rgba(142, 198, 63, .18);
+      cursor: pointer;
+      user-select: none;
+      transition: all .2s;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #8ec63f, #b8e04a);
+      color: #fff;
+      border-color: #8ec63f;
+      box-shadow: 0 4px 20px rgba(142, 198, 63, .35);
+    }
+
+    .btn:active {
+      transform: scale(.98)
+    }
+
+    .btn.secondary {
+      flex: 0 0 auto;
+      width: var(--tap);
+      background: rgba(255, 255, 255, .60);
+      backdrop-filter: blur(8px);
+      border-color: rgba(160, 175, 140, .35);
+      color: var(--muted);
+    }
+
+    .btn.secondary:hover {
+      background: rgba(200, 240, 0, .16);
+      border-color: var(--a);
+      color: var(--b)
+    }
+
+    /* ─── Misc ─── */
+    .hint {
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 7px
+    }
+
+    .smallNote {
+      padding: 12px 14px;
+      border-top: 1px solid rgba(160, 175, 140, .20);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    hr.sep {
+      border: none;
+      border-top: 1px solid rgba(160, 175, 140, .20);
+      margin: 12px 0
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top">
+    <div class="brand">
+      <h1>IAMx</h1>
+      <div class="sub">Nube Municipal Inteligente - Comalcalco</div>
+    </div>
+    <div class="toolbar">
+      <div class="search" aria-label="Buscar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M21 21l-4.3-4.3m1.3-5.2a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z" stroke="#6b7280" stroke-width="1.8"
+            stroke-linecap="round" />
+        </svg>
+        <input id="q" placeholder="Buscar alumno, proyecto, tarea…" />
+      </div>
+      <button class="iconBtn" id="btnReset" title="Reset" aria-label="Reset">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M3 12a9 9 0 101.6-5.1" stroke="#6b7280" stroke-width="1.8" stroke-linecap="round" />
+          <path d="M3 4v5h5" stroke="#6b7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
+    <div class="chips" role="tablist">
+      <button class="chip" data-target="#s0" data-active="true"><span class="dot"></span>IAMx</button>
+      <button class="chip" data-target="#s1"><span class="dot"></span>Equipos</button>
+      <button class="chip" data-target="#s2"><span class="dot"></span>Semana</button>
+      <button class="chip" data-target="#s3"><span class="dot"></span>Entregables</button>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <section class="card" id="s0">
+      <div class="cardH">
+        <h2>ACTIVIDADES Y ENTREGABLES</h2>
+        <p>Cada proyecto cuenta con sus actividades y entregables de cada ingeniero involucrado.</p>
+      </div>
+      <div class="grid2">
+        <div class="stat">
+          <div class="k">Equipos</div>
+          <div class="v"><b>3</b><span class="pill">5 ingenieros</span></div>
+        </div>
+        <div class="stat">
+          <div class="k">Proyectos</div>
+          <div class="v"><b>3</b><span class="pill">Ventanilla - Semaforo - Reportes</span></div>
+        </div>
+        <div class="stat">
+          <div class="k">FASES</div>
+          <div class="v"><b>6</b><span class="pill">24 semanas</span></div>
+        </div>
+        <div class="stat">
+          <div class="k">Avances</div>
+          <div class="v"><b>☑️</b><span class="pill">Todos los Viernes</span></div>
+        </div>
+      </div>
+
+      <div class="progressWrap" id="globalProgress"></div>
+
+      <div class="smallNote">
+        Ventanilla Única está planeada con 6 perfiles de Sistemas, pero aquí se mantiene 3×5. Se
+        recomienda apoyo rotativo 4h/sem (Sistemas) desde Equipo N o B en semanas críticas (F3–F4).
+      </div>
+    </section>
+
+    <section class="card" id="s1">
+      <div class="cardH">
+        <h2>Equipos</h2>
+        <p>Abre un equipo, elige la F A S E y marca tareas por persona. Todo se guarda localmente.</p>
+      </div>
+
+      <div class="sectionPad">
+        <div class="box">
+          <h3>F A S E S</h3>
+          <p>Selecciona un F A S E para ver las actividades y entregables por ingeniero.</p>
+        </div>
+      </div>
+
+      <div class="phaseStrip" id="phaseStrip"></div>
+      <div class="sectionPad" id="teamsWrap"></div>
+    </section>
+
+    <section class="card" id="s2">
+      <div class="cardH">
+        <h2>Semana</h2>
+        <p>5 días presencial.Regla: viernes se entrega, lunes se decide.</p>
+      </div>
+      <div class="sectionPad" id="weekly"></div>
+    </section>
+
+    <section class="card" id="s3">
+      <div class="cardH">
+        <h2>Entregables</h2>
+        <p>Por proyecto para cierre.</p>
+      </div>
+      <div class="sectionPad" id="deliverables"></div>
+    </section>
+  </main>
+
+  <div class="bottom">
+    <div class="bottomIn">
+      <button class="btn secondary" id="btnTop" aria-label="Ir arriba">↑</button>
+      <button class="btn" id="btnExpand">Expandir vista</button>
+      <button class="btn secondary" id="btnCollapse" aria-label="Colapsar">⟂</button>
+    </div>
+    <div class="hint">MI PRIMER CODIGO PARA MI FUTURO - IAMx</div>
+  </div>
+
+  <script>
+    const DATA = { "meta": { "title": "Tablero de Control · Comalcalco (3×5)", "version": "v1.0", "generated": "2026-03-04 16:06" }, "projects": [{ "id": "reporte", "name": "Reporte Ciudadano Inteligente", "goal": "Captura → clasificación IA → geolocalización → ticket → estatus → analítica" }, { "id": "ventanilla", "name": "Ventanilla Única Digital", "goal": "Catálogo trámites → formulario → adjuntos → acuse → seguimiento → bitácora" }, { "id": "semaforo", "name": "Semáforo Inteligente", "goal": "Visión (YOLO) + reglas + telemetría IoT + tablero + piloto en modo recomendación" }], "phases": [{ "id": "F1", "name": "Fundación", "weeks": "Sem 1–2", "focus": "Reglas, mapa, arquitectura, prototipo navegable" }, { "id": "F2", "name": "MVP", "weeks": "Sem 3–5", "focus": "Flujo mínimo funcionando + demo" }, { "id": "F3", "name": "Construcción", "weeks": "Sem 6–11", "focus": "Features clave + analítica + robustez" }, { "id": "F4", "name": "Integración + Seguridad", "weeks": "Sem 12–16", "focus": "Roles, auditoría, hardening, fail-safe" }, { "id": "F5", "name": "Campo + Hardening", "weeks": "Sem 17–20", "focus": "Piloto controlado + medición + fixes" }, { "id": "F6", "name": "Piloto + Entrega", "weeks": "Sem 21–24", "focus": "Paquete final, manuales, evidencia, escalamiento" }], "teams": [{ "id": "A", "project": "reporte", "name": "Equipo A", "note": "Cumple 2E + 3S", "members": [{ "name": "José Reyes Hernández Alejandro", "role": "Electrónica", "tags": ["E", "Evidencia/Campo"] }, { "name": "Andrea Morales de la Cruz", "role": "Electrónica", "tags": ["E", "Validación/Campo"] }, { "name": "Gustavo Erick Villeda Domínguez", "role": "Sistemas", "tags": ["S", "Arquitectura/API"] }, { "name": "Angel Eduardo Lara Juárez", "role": "Sistemas", "tags": ["S", "UX/UI"] }, { "name": "Cesar Marquez Sanchez", "role": "Sistemas", "tags": ["S", "Datos/Modelo"] }] }, { "id": "B", "project": "ventanilla", "name": "Equipo B", "note": "Operación con 5 Sistemas (apoyo rotativo 4h/sem recomendado en F3–F4)", "members": [{ "name": "Gabriela Coronel Contreras", "role": "Sistemas", "tags": ["S", "Componentes/Front"] }, { "name": "Brayan del Carmen Cruz Hernández", "role": "Sistemas", "tags": ["S", "UX/Microcopy"] }, { "name": "Gustavo Alexander Solis Jimenez", "role": "Sistemas", "tags": ["S", "Back/Integraciones"] }, { "name": "José Angel Olan de los Santos", "role": "Sistemas", "tags": ["S", "Flujos/Reglas"] }, { "name": "Mariana Izquierdo Hernández", "role": "Sistemas", "tags": ["S", "QA/Pruebas"] }] }, { "id": "C", "project": "semaforo", "name": "Equipo C", "note": "3E + 2S (compensación: 1 perfil Sistemas rotativo 4h/sem del Equipo A o B)", "members": [{ "name": "Lorena Martínez Izquierdo", "role": "Electrónica", "tags": ["E", "Control/Failsafe"] }, { "name": "Angel Gabriel Vazquez de la Cruz", "role": "Electrónica", "tags": ["E", "IoT/Telemetría"] }, { "name": "Paola Estefanía Jiménez Sánchez", "role": "Electrónica", "tags": ["E", "Simulación/HW-SW"] }, { "name": "Alexa Dominguez Castellanos", "role": "Sistemas", "tags": ["S", "Dashboard"] }, { "name": "Isidro de los Remedios Marquez Lopez", "role": "Sistemas", "tags": ["S", "Lógica/Backend"] }] }], "weekly_model": [{ "day": "Lunes (Presencial)", "blocks": [{ "time": "9:00–11:00", "name": "Formación según carrera", "desc": "Aplicación directa al proyecto (tarea técnica del día)" }, { "time": "11:30–13:00", "name": "Sesión con asesor", "desc": "Revisión PRs, bloqueos, decisiones" }, { "time": "13:00–15:00", "name": "Desarrollo", "desc": "Construcción del sprint" }] }, { "day": "Martes (Presencial)", "blocks": [{ "time": "9:00–11:00", "name": "Logística y planeación", "desc": "Sprint planning + asignación" }, { "time": "11:30–15:00", "name": "Desarrollo continuo", "desc": "Implementación + pruebas rápidas" }] }, { "day": "Miércoles (Presencial)", "blocks": [{ "time": "9:00–11:00", "name": "Potencial humano", "desc": "Comunicación, liderazgo, coordinación" }, { "time": "11:30–15:00", "name": "Integración y pruebas", "desc": "Merge, QA, demo interna" }] }, { "day": "Jueves (Presencial)", "blocks": [{ "time": "Bloque 1", "name": "Desarrollo profundo", "desc": "Features grandes + documentación" }, { "time": "Bloque 2", "name": "IA/Optimización", "desc": "Entrenamientos, métricas, performance" }] }, { "day": "Viernes (Presencial)", "blocks": [{ "time": "Bloque 1", "name": "QA + demo grabada", "desc": "Demo 3–5 min + checklist" }, { "time": "Bloque 2", "name": "Reporte semanal", "desc": "KPI, bloqueos, plan próximo lunes" }] }], "tasks": { "reporte": { "F1": [{ "t": "Definir 12 categorías + severidad + SLA base", "w": "Taxonomía operable" }, { "t": "Wireflow móvil (captura/estatus) + panel operador", "w": "Prototipo navegable" }, { "t": "Modelo de datos de ticket (estados, bitácora, adjuntos)", "w": "Schema v1" }, { "t": "Reglas anti-spam + validación mínima", "w": "Política v1" }], "F2": [{ "t": "MVP web móvil con evidencia (compresión + límites)", "w": "Formulario + carga" }, { "t": "Backlog/cola: Nuevo→Validación→Asignado→En proceso→Resuelto→Cerrado", "w": "Workflow" }, { "t": "Notificación confirmación + recordatorios", "w": "Mensajería" }, { "t": "Métricas base + tablero", "w": "KPI v1" }], "F3": [{ "t": "Clasificación IA baseline + evaluación", "w": "Reporte precision/recall" }, { "t": "Mapa por colonia + clustering de reportes", "w": "Heatmap" }, { "t": "Deduplicación y fusión de tickets", "w": "Reglas" }, { "t": "Panel analítica SLA/backlog real", "w": "Dashboard v2" }], "F4": [{ "t": "Roles: ciudadano/operador/supervisor/auditor", "w": "RBAC" }, { "t": "Bitácora inmutable de cambios", "w": "Audit log" }, { "t": "Rate limit + captcha selectivo", "w": "Antiabuso" }, { "t": "Backups + exportación CSV/JSON", "w": "Transparencia" }], "F5": [{ "t": "Piloto con 1–2 áreas + 2 colonias", "w": "Operación real" }, { "t": "Ciclo bug→fix→verificación", "w": "QA loop" }, { "t": "Reporte de aprendizaje", "w": "Insights" }], "F6": [{ "t": "Paquete final: repo + despliegue + checklist", "w": "Entrega técnica" }, { "t": "Demo final 5 min + KPI + plan escalamiento", "w": "Presentación" }, { "t": "Carpeta evidencias piloto + lecciones", "w": "Cierre" }] }, "ventanilla": { "F1": [{ "t": "Seleccionar 3 trámites piloto + mapear proceso actual", "w": "Mapa" }, { "t": "Diseñar estados del expediente y prevenciones", "w": "Workflow" }, { "t": "Estructura de expediente digital", "w": "Carpeta v1" }, { "t": "Acuse digital (folio, QR, resumen)", "w": "Plantilla" }], "F2": [{ "t": "Alta de trámite + adjuntos + folio", "w": "MVP" }, { "t": "Panel operador: cola, filtros, asignación", "w": "Backoffice" }, { "t": "Notificaciones: recibido, prevención, aprobado", "w": "Mensajería" }], "F3": [{ "t": "Plantillas de trámites configurables", "w": "Builder" }, { "t": "Buscador por trámite/estado/fecha", "w": "Search" }, { "t": "Reportes operativos día/semana/mes", "w": "KPIs" }], "F4": [{ "t": "Roles por área + permisos finos", "w": "RBAC" }, { "t": "Bitácora completa del expediente", "w": "Audit log" }, { "t": "Retención/exportación para transparencia", "w": "Compliance" }], "F5": [{ "t": "Piloto con 1–2 direcciones", "w": "Operación" }, { "t": "Medición de tiempos y cuellos de botella", "w": "SLA" }, { "t": "Mejoras rápidas UI/validaciones", "w": "Hardening" }], "F6": [{ "t": "10 trámites configurables + manual configuración", "w": "Escalamiento" }, { "t": "Guía operación por área + capacitación", "w": "Handoff" }, { "t": "Video demo + checklist escalamiento", "w": "Cierre" }] }, "semaforo": { "F1": [{ "t": "Definir intersección piloto y variables (flujo, peatón, emergencia)", "w": "Caso piloto" }, { "t": "Arquitectura: cámara/edge→IA→controlador→telemetría→dashboard", "w": "Blueprint" }, { "t": "Reglas de fases + amarillos + prioridad peatonal", "w": "Reglamento v1" }, { "t": "Simulación base con datos sintéticos", "w": "Sim v1" }], "F2": [{ "t": "YOLO conteo por carril + densidad", "w": "Detector v1" }, { "t": "Reglas de ajuste de tiempos (hora pico/peatón/emergencia)", "w": "Motor reglas" }, { "t": "Dashboard ciclo actual + sugerencias + historial", "w": "UI v1" }], "F3": [{ "t": "LPR baseline (OCR) para demo + eventos por placa", "w": "LPR v1" }, { "t": "Eventos: pasa en rojo, bloqueo, peatón en riesgo", "w": "Eventos v1" }, { "t": "Política de datos: retención y acceso", "w": "Privacidad" }], "F4": [{ "t": "Modo degradado (IA falla→ciclos fijos seguros)", "w": "Fail-safe" }, { "t": "Monitoreo: uptime/temperatura/reinicios/paquetes", "w": "Telemetría" }, { "t": "Hardening: credenciales, cifrado, logs", "w": "Seguridad" }], "F5": [{ "t": "Piloto modo recomendación (no controla luces)", "w": "Campo seguro" }, { "t": "Comparativa ciclo fijo vs sugerido", "w": "Métrica" }, { "t": "Registro de incidentes y ajustes", "w": "QA" }], "F6": [{ "t": "Simulador + dashboard + IA demo reproducible", "w": "Entrega demo" }, { "t": "Documento de piloto (riesgos, operación, escalamiento)", "w": "Handoff" }, { "t": "Checklist instalación real (posterior)", "w": "Plan" }] } } };
+    const LS_KEY = "comalcalco_tablero_v1";
+    let state = { phase: "F1", done: {} };
+
+    function uid(s) {
+      return s.toLowerCase().normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+    }
+    function taskId(teamId, phaseId, memberName, taskIndex) {
+      return `t:${teamId}:${phaseId}:${uid(memberName)}:${taskIndex}`;
+    }
+    function load() {
+      try {
+        const raw = localStorage.getItem(LS_KEY);
+        if (raw) state = { ...state, ...JSON.parse(raw) };
+      } catch (e) { }
+    }
+    function save() {
+      try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) { }
+    }
+    function pct(done, total) { return total ? Math.round((done / total) * 100) : 0; }
+    function projectTasks(projectId, phaseId) {
+      return (DATA.tasks[projectId] && DATA.tasks[projectId][phaseId]) ? DATA.tasks[projectId][phaseId] : [];
+    }
+    function computeGlobal() {
+      let total = 0, done = 0;
+      for (const team of DATA.teams) {
+        const tasks = projectTasks(team.project, state.phase);
+        for (const m of team.members) {
+          tasks.forEach((t, i) => {
+            total++;
+            const id = taskId(team.id, state.phase, m.name, i);
+            if (state.done[id]) done++;
+          });
+        }
+      }
+      return { total, done, p: pct(done, total) };
+    }
+    function computeByProject() {
+      const out = {};
+      for (const proj of DATA.projects) {
+        let total = 0, done = 0;
+        for (const team of DATA.teams.filter(t => t.project === proj.id)) {
+          const tasks = projectTasks(proj.id, state.phase);
+          for (const m of team.members) {
+            tasks.forEach((t, i) => {
+              total++;
+              const id = taskId(team.id, state.phase, m.name, i);
+              if (state.done[id]) done++;
+            });
+          }
+        }
+        out[proj.id] = { total, done, p: pct(done, total) };
+      }
+      return out;
+    }
+    function renderGlobalProgress() {
+      const g = computeGlobal();
+      const byP = computeByProject();
+      const el = document.getElementById("globalProgress");
+      el.innerHTML = "";
+
+      const row = document.createElement("div");
+      row.className = "barRow";
+      row.innerHTML = `<div class="label">Progreso global · ${state.phase}</div><div class="pct">${g.p}% (${g.done}/${g.total})</div>`;
+      el.appendChild(row);
+
+      const track = document.createElement("div");
+      track.className = "track";
+      track.innerHTML = `<div class="fill" style="width:${g.p}%"></div>`;
+      el.appendChild(track);
+
+      const sep = document.createElement("hr");
+      sep.className = "sep";
+      el.appendChild(sep);
+
+      for (const proj of DATA.projects) {
+        const p = byP[proj.id];
+        const row2 = document.createElement("div");
+        row2.className = "barRow";
+        row2.innerHTML = `<div class="label">${proj.name}</div><div class="pct">${p.p}% (${p.done}/${p.total})</div>`;
+        el.appendChild(row2);
+
+        const track2 = document.createElement("div");
+        track2.className = "track";
+        const color = (proj.id === "reporte") ? "var(--g)" : (proj.id === "ventanilla" ? "var(--a)" : "var(--r)");
+        track2.innerHTML = `<div class="fill" style="width:${p.p}%; background:linear-gradient(90deg, ${color}, var(--b));"></div>`;
+        el.appendChild(track2);
+      }
+    }
+    function renderPhaseStrip() {
+      const strip = document.getElementById("phaseStrip");
+      strip.innerHTML = "";
+      for (const ph of DATA.phases) {
+        const b = document.createElement("div");
+        b.className = "phaseBtn";
+        b.dataset.on = (ph.id === state.phase) ? "true" : "false";
+        b.innerHTML = `<div class="k">${ph.id}</div><div class="t">${ph.weeks}</div>`;
+        b.addEventListener("click", () => {
+          state.phase = ph.id;
+          save();
+          renderAll();
+          document.getElementById("s1").scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        strip.appendChild(b);
+      }
+    }
+    function renderTeams() {
+      const wrap = document.getElementById("teamsWrap");
+      wrap.innerHTML = "";
+
+      for (const team of DATA.teams) {
+        const proj = DATA.projects.find(p => p.id === team.project);
+        const t = document.createElement("div");
+        t.className = "team";
+        t.dataset.open = (team.id === "A") ? "true" : "false";
+
+        const badgeClass = (team.id === "A") ? "a" : (team.id === "B" ? "b" : "c");
+        const badgeLabel = (team.id === "A") ? "N" : (team.id === "B" ? "U" : "B");
+        t.innerHTML = `
+      <div class="teamH">
+        <div class="badge ${badgeClass}">${badgeLabel}</div>
+        <div class="teamTitle">
+          <h3>${proj.name}</h3>
+          <div class="meta">${proj.goal}<br><span style="opacity:.9">${team.note}</span></div>
+        </div>
+        <div class="teamRight">
+          <div class="tag">${team.members.length} miembros</div>
+          <div class="chev" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#6b7280" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="teamB">
+        <div class="memberGrid"></div>
+        <div class="smallNote" style="border-top:1px solid rgba(255,255,255,.08)">
+          Fase activa: <b>${state.phase}</b> · Enfoque: ${DATA.phases.find(x => x.id === state.phase).focus}
+        </div>
+      </div>
+    `;
+
+        t.querySelector(".teamH").addEventListener("click", () => {
+          t.dataset.open = (t.dataset.open === "true") ? "false" : "true";
+        });
+
+        const mg = t.querySelector(".memberGrid");
+        const tasks = projectTasks(team.project, state.phase);
+
+        for (const m of team.members) {
+          const mEl = document.createElement("div");
+          mEl.className = "member";
+          const tags = (m.tags || []).map(x => `<span>${x}</span>`).join("");
+          mEl.innerHTML = `
+        <div class="mTop">
+          <div>
+            <div class="mName">${m.name}</div>
+            <div style="margin-top:6px; color:#6b7280; font-size:12px">${m.role}</div>
+          </div>
+          <div class="mTags">${tags}</div>
+        </div>
+        <div class="todo"></div>
+      `;
+          const todo = mEl.querySelector(".todo");
+
+          tasks.forEach((tk, i) => {
+            const id = taskId(team.id, state.phase, m.name, i);
+            const on = !!state.done[id];
+            const item = document.createElement("div");
+            item.className = "todoItem";
+            item.dataset.q = `${m.name} ${proj.name} ${tk.t} ${tk.w}`.toLowerCase();
+            item.innerHTML = `
+          <div class="ck" data-on="${on ? "true" : "false"}" role="button" aria-label="Marcar tarea">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="opacity:${on ? 1 : 0}">
+              <path d="M20 6L9 17l-5-5" stroke="#10b981" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="todoText">
+            <b>${tk.t}</b>
+            <span>Entregable: ${tk.w}</span>
+          </div>
+        `;
+            item.querySelector(".ck").addEventListener("click", () => {
+              state.done[id] = !state.done[id];
+              save();
+              renderGlobalProgress();
+              const ck = item.querySelector(".ck");
+              const svg = item.querySelector("svg");
+              ck.dataset.on = state.done[id] ? "true" : "false";
+              svg.style.opacity = state.done[id] ? 1 : 0;
+            });
+            todo.appendChild(item);
+          });
+
+          mg.appendChild(mEl);
+        }
+
+        wrap.appendChild(t);
+      }
+    }
+    function renderWeekly() {
+      const el = document.getElementById("weekly");
+      el.innerHTML = "";
+      for (const d of DATA.weekly_model) {
+        const box = document.createElement("div");
+        box.className = "box";
+        box.style.marginBottom = "10px";
+        box.innerHTML = `<h3>${d.day}</h3><p>${d.blocks.length} bloques</p>`;
+        const list = document.createElement("div");
+        list.className = "tableLite";
+        for (const b of d.blocks) {
+          const r = document.createElement("div");
+          r.className = "rowLite";
+          r.innerHTML = `<div><b>${b.time}</b><div style="margin-top:6px;color:#6b7280;font-size:12px;line-height:1.3">${b.name} · ${b.desc}</div></div><span>${state.phase}</span>`;
+          list.appendChild(r);
+        }
+        box.appendChild(list);
+        el.appendChild(box);
+      }
+    }
+    function renderDeliverables() {
+      const el = document.getElementById("deliverables");
+      el.innerHTML = "";
+      const cards = [
+        {
+          id: "reporte", title: "Reporte Ciudadano Inteligente", items: [
+            "MVP (staging sólido) + roles + bitácora + exportación",
+            "IA baseline + reporte de calidad + dataset semilla",
+            "Manual operativo + tablero de KPIs"
+          ]
+        },
+        {
+          id: "ventanilla", title: "Ventanilla Única Digital", items: [
+            "10 trámites configurables + expediente digital + acuse (QR/folio)",
+            "Panel operador + auditoría + reportes",
+            "Guía de configuración + capacitación (video + PDF)"
+          ]
+        },
+        {
+          id: "semaforo", title: "Semáforo Inteligente", items: [
+            "Simulador + dashboard + IA conteo (YOLO) + modo recomendación",
+            "Control y fail-safe + telemetría + seguridad",
+            "Documento de piloto + checklist instalación (posterior)"
+          ]
+        }
+      ];
+      for (const c of cards) {
+        const box = document.createElement("div");
+        box.className = "box";
+        box.style.marginBottom = "10px";
+        const items = c.items.map(x => `<li>${x}</li>`).join("");
+        box.innerHTML = `<h3>${c.title}</h3><p>Definición de terminado (F6)</p><ul style="margin:10px 0 0;padding-left:18px;color:#374151;font-size:12px;line-height:1.4">${items}</ul>`;
+        el.appendChild(box);
+      }
+    }
+    function bindChips() {
+      document.querySelectorAll(".chip").forEach(ch => {
+        ch.addEventListener("click", () => {
+          document.querySelectorAll(".chip").forEach(c => c.dataset.active = "false");
+          ch.dataset.active = "true";
+          const t = ch.dataset.target;
+          const node = document.querySelector(t);
+          if (node) node.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+    }
+    function applySearch(q) {
+      const needle = (q || "").trim().toLowerCase();
+      document.querySelectorAll(".todoItem").forEach(it => {
+        if (!needle) it.style.display = "";
+        else it.style.display = (it.dataset.q && it.dataset.q.includes(needle)) ? "" : "none";
+      });
+    }
+    function renderAll() {
+      renderPhaseStrip();
+      renderTeams();
+      renderWeekly();
+      renderDeliverables();
+      renderGlobalProgress();
+      applySearch(document.getElementById("q").value);
+    }
+    function expandView() { document.querySelectorAll(".team").forEach(t => t.dataset.open = "true"); }
+    function collapseView() {
+      document.querySelectorAll(".team").forEach(t => t.dataset.open = "false");
+      const a = document.querySelector('.team');
+      if (a) a.dataset.open = "true";
+    }
+
+    load();
+    bindChips();
+    renderAll();
+
+    document.getElementById("q").addEventListener("input", (e) => applySearch(e.target.value));
+    document.getElementById("btnTop").addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+    document.getElementById("btnExpand").addEventListener("click", () => expandView());
+    document.getElementById("btnCollapse").addEventListener("click", () => collapseView());
+    document.getElementById("btnReset").addEventListener("click", () => {
+      const ok = confirm("¿Resetear progreso de este dispositivo?");
+      if (!ok) return;
+      state.done = {};
+      save();
+      renderAll();
+    });
+  </script>
+</body>
+
+</html>

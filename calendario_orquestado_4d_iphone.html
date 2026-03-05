@@ -1,0 +1,1639 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0f19" />
+  <title>Fuck</title>
+  <style>
+    :root {
+      --bg0: #070a12;
+      --bg1: #0b1022;
+      --card: rgba(255, 255, 255, .08);
+      --card2: rgba(255, 255, 255, .06);
+      --stroke: rgba(255, 255, 255, .14);
+      --stroke2: rgba(255, 255, 255, .10);
+      --text: #eef2ff;
+      --muted: rgba(238, 242, 255, .72);
+      --muted2: rgba(238, 242, 255, .54);
+      --good: rgba(80, 250, 180, .95);
+      --warn: rgba(255, 209, 102, .95);
+      --bad: rgba(255, 99, 132, .95);
+      --glow: rgba(124, 92, 255, .55);
+      --glow2: rgba(88, 196, 255, .45);
+      --shadow: 0 18px 50px rgba(0, 0, 0, .45);
+      --shadow2: 0 10px 30px rgba(0, 0, 0, .35);
+      --r: 22px;
+      --r2: 16px;
+      --pad: 16px;
+      --pad2: 14px;
+      --w: min(430px, 100vw);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bot: env(safe-area-inset-bottom, 0px);
+    }
+
+    .col2 {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+
+    }
+
+    .col3 {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: end;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1200px 900px at 20% -10%, rgba(124, 92, 255, .25), transparent 55%),
+        radial-gradient(900px 800px at 90% 10%, rgba(88, 196, 255, .18), transparent 50%),
+        radial-gradient(1000px 900px at 40% 120%, rgba(255, 209, 102, .10), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x: hidden;
+    }
+
+    /* Animated blobs */
+    .blobs {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+      filter: blur(30px) saturate(1.2);
+      opacity: .85;
+    }
+
+    .blob {
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, rgba(124, 92, 255, .55), rgba(124, 92, 255, .05) 65%, transparent 70%),
+        radial-gradient(circle at 70% 70%, rgba(88, 196, 255, .35), rgba(88, 196, 255, .05) 60%, transparent 72%);
+      transform: translate3d(0, 0, 0);
+      animation: floaty 16s ease-in-out infinite;
+      mix-blend-mode: screen;
+    }
+
+    .blob.b2 {
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle at 35% 35%, rgba(88, 196, 255, .45), rgba(88, 196, 255, .06) 65%, transparent 72%),
+        radial-gradient(circle at 70% 65%, rgba(255, 209, 102, .25), rgba(255, 209, 102, .04) 60%, transparent 72%);
+      animation-duration: 19s;
+    }
+
+    .blob.b3 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle at 35% 35%, rgba(255, 99, 132, .22), rgba(255, 99, 132, .04) 65%, transparent 72%),
+        radial-gradient(circle at 70% 70%, rgba(124, 92, 255, .38), rgba(124, 92, 255, .05) 60%, transparent 72%);
+      animation-duration: 22s;
+    }
+
+    @keyframes floaty {
+      0% {
+        transform: translate(-12px, 14px) scale(1);
+      }
+
+      25% {
+        transform: translate(26px, -22px) scale(1.05);
+      }
+
+      50% {
+        transform: translate(-18px, -8px) scale(1.02);
+      }
+
+      75% {
+        transform: translate(20px, 26px) scale(1.06);
+      }
+
+      100% {
+        transform: translate(-12px, 14px) scale(1);
+      }
+    }
+
+    /* Layout */
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: var(--w);
+      margin: 0 auto;
+      padding: calc(var(--safe-top) + 14px) 14px calc(var(--safe-bot) + 22px);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      padding: 10px 0 12px;
+      margin: calc(var(--safe-top) + 2px) 0 12px;
+      z-index: 5;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .header {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(124, 92, 255, .85), rgba(88, 196, 255, .75));
+      box-shadow: 0 14px 38px rgba(124, 92, 255, .25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo::after {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .45), transparent 60%);
+      transform: rotate(18deg);
+      animation: sheen 3.6s ease-in-out infinite;
+      opacity: .7;
+    }
+
+    @keyframes sheen {
+      0% {
+        transform: translateX(-24%) rotate(18deg);
+        opacity: .35;
+      }
+
+      50% {
+        transform: translateX(24%) rotate(18deg);
+        opacity: .65;
+      }
+
+      100% {
+        transform: translateX(-24%) rotate(18deg);
+        opacity: .35;
+      }
+    }
+
+    h1 {
+      font-size: 16px;
+      margin: 0;
+      letter-spacing: .2px;
+      line-height: 1.15;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+      letter-spacing: .2px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid var(--stroke2);
+      box-shadow: var(--shadow2);
+      font-size: 12px;
+      color: var(--muted);
+      user-select: none;
+      transform: translateZ(0);
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+    }
+
+    .pill:active {
+      transform: scale(.98);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 99px;
+      background: rgba(80, 250, 180, .85);
+      box-shadow: 0 0 0 6px rgba(80, 250, 180, .08);
+    }
+
+    /* Quick nav */
+    .nav {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      overflow: auto;
+      padding: 0 2px 10px;
+      scroll-snap-type: x mandatory;
+    }
+
+    .nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid var(--stroke2);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .2px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
+      user-select: none;
+    }
+
+    .chip strong {
+      color: var(--text);
+      font-weight: 650;
+      font-size: 12px;
+    }
+
+    .chip:active {
+      transform: scale(.985);
+    }
+
+    .chip.active {
+      background: linear-gradient(135deg, rgba(124, 92, 255, .20), rgba(88, 196, 255, .14));
+      border-color: rgba(124, 92, 255, .35);
+      color: var(--text);
+      box-shadow: 0 18px 60px rgba(124, 92, 255, .12);
+    }
+
+    .chip .mini {
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .07);
+      border: 1px solid rgba(255, 255, 255, .10);
+    }
+
+    /* Search */
+    .search {
+      margin: 10px 0 14px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 12px;
+      border-radius: var(--r);
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid var(--stroke2);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: var(--shadow2);
+    }
+
+    .search input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 14px;
+      letter-spacing: .2px;
+    }
+
+    .search input::placeholder {
+      color: rgba(238, 242, 255, .45);
+    }
+
+    .kbd {
+      font-size: 11px;
+      color: rgba(238, 242, 255, .55);
+      border: 1px solid rgba(255, 255, 255, .14);
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .04);
+      user-select: none;
+    }
+
+    /* Cards / sections */
+    .card {
+      border-radius: var(--r);
+      background: linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .05));
+      border: 1px solid rgba(255, 255, 255, .13);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      overflow: hidden;
+      transform: translateZ(0);
+    }
+
+    .card+.card {
+      margin-top: 14px;
+    }
+
+    .cardHead {
+      padding: 14px 14px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .tagRow {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .tag {
+      font-size: 11px;
+      color: rgba(238, 242, 255, .72);
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .10);
+    }
+
+    .tag.good {
+      border-color: rgba(80, 250, 180, .28);
+      background: rgba(80, 250, 180, .08);
+    }
+
+    .tag.warn {
+      border-color: rgba(255, 209, 102, .28);
+      background: rgba(255, 209, 102, .08);
+    }
+
+    .tag.purp {
+      border-color: rgba(124, 92, 255, .32);
+      background: rgba(124, 92, 255, .10);
+    }
+
+    .title {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.15;
+      letter-spacing: .2px;
+    }
+
+    .desc {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.45;
+    }
+
+    .btn {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .12);
+      color: var(--text);
+      font-size: 12px;
+      user-select: none;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .btn:active {
+      transform: scale(.985);
+    }
+
+    .btn .spark {
+      width: 10px;
+      height: 10px;
+      border-radius: 99px;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .85), rgba(255, 255, 255, .06));
+      box-shadow: 0 0 0 6px rgba(124, 92, 255, .10);
+    }
+
+    /* Accordion */
+    .acc {
+      border-top: 1px solid rgba(255, 255, 255, .10);
+    }
+
+    .accItem {
+      border-top: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .accItem:first-child {
+      border-top: none;
+    }
+
+    .accBtn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 14px;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .accLeft {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .12);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .icon::after {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at 35% 35%, rgba(124, 92, 255, .25), transparent 60%);
+      transform: rotate(10deg);
+      opacity: .9;
+    }
+
+    .icon span {
+      position: relative;
+      z-index: 1;
+      font-size: 14px;
+    }
+
+    .accTitle {
+      margin: 0;
+      font-size: 13px;
+      letter-spacing: .2px;
+      line-height: 1.15;
+    }
+
+    .accMeta {
+      margin-top: 4px;
+      color: rgba(238, 242, 255, .62);
+      font-size: 12px;
+    }
+
+    .chev {
+      width: 22px;
+      height: 22px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid rgba(255, 255, 255, .10);
+      display: grid;
+      place-items: center;
+      transition: transform .24s ease;
+      flex: 0 0 auto;
+    }
+
+    .chev svg {
+      width: 14px;
+      height: 14px;
+      opacity: .9;
+    }
+
+    .accPanel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .32s ease;
+    }
+
+    .accInner {
+      padding: 0 14px 14px;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.55;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .miniCard {
+      border-radius: var(--r2);
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .10);
+      padding: 12px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, .22);
+    }
+
+    .miniCard h4 {
+      margin: 0;
+      font-size: 12px;
+      letter-spacing: .2px;
+      color: var(--text);
+    }
+
+    .miniCard p {
+      margin: 6px 0 0;
+      font-size: 12px;
+      color: rgba(238, 242, 255, .66);
+      line-height: 1.45;
+    }
+
+    .kpi {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      gap: 10px;
+    }
+
+    .bar {
+      flex: 1 1 auto;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .10);
+      overflow: hidden;
+    }
+
+    .bar>i {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(124, 92, 255, .85), rgba(88, 196, 255, .80));
+      box-shadow: 0 14px 34px rgba(124, 92, 255, .22);
+      transition: width .55s cubic-bezier(.2, .9, .2, 1);
+    }
+
+    .kpi small {
+      color: rgba(238, 242, 255, .62);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    /* Timeline */
+    .timeline {
+      margin-top: 10px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .titem {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px;
+      border-radius: var(--r2);
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .10);
+    }
+
+    .tbullet {
+      width: 10px;
+      height: 10px;
+      border-radius: 99px;
+      margin-top: 4px;
+      background: rgba(88, 196, 255, .85);
+      box-shadow: 0 0 0 6px rgba(88, 196, 255, .10);
+      flex: 0 0 auto;
+    }
+
+    .titem strong {
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    .titem div {
+      color: rgba(238, 242, 255, .66);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: var(--r);
+      background: rgba(255, 255, 255, .05);
+      border: 1px solid rgba(255, 255, 255, .10);
+      color: rgba(238, 242, 255, .62);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    /* Subtle scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+
+    .reveal.on {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .blob {
+        animation: none;
+      }
+
+      .logo::after {
+        animation: none;
+      }
+
+      .accPanel {
+        transition: none;
+      }
+
+      .reveal {
+        transition: none;
+      }
+
+      .chip,
+      .btn,
+      .pill {
+        transition: none;
+      }
+
+      .chev {
+        transition: none;
+      }
+
+      .bar>i {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="blobs" aria-hidden="true">
+    <div class="blob" style="left:-110px; top:110px;"></div>
+    <div class="blob b2" style="right:-160px; top:220px;"></div>
+    <div class="blob b3" style="left:40px; bottom:-140px;"></div>
+  </div>
+
+  <div class="wrap">
+    <div class="topbar">
+      <div class="header">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <h1>CALENDARIO DE ACTIVIDADES</h1>
+            <div class="sub">EQUIPOS</div>
+          </div>
+        </div>
+        <div class="pill" id="pulse">
+          <span class="dot"></span>
+          <span id="nowtxt">Modo operativo</span>
+        </div>
+      </div>
+
+      <div class="nav" id="nav">
+        <div class="chip active" data-target="#cal1"><span class="mini"></span><strong>Prácticas</strong> TESOEM +
+          USICAMM</div>
+        <div class="chip" data-target="#cal2"><span class="mini"></span><strong>Ruta64</strong> Dev Core</div>
+        <div class="chip" data-target="#cal3"><span class="mini"></span><strong>Operación</strong> Adriana + David</div>
+        <div class="chip" data-target="#cal4"><span class="mini"></span><strong>Estrategia</strong> Cinthia + Cristhian
+          + Gerardo</div>
+      </div>
+
+      <div class="search" role="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" stroke="rgba(238,242,255,.72)" stroke-width="2" />
+          <path d="M16.5 16.5 21 21" stroke="rgba(238,242,255,.72)" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <input id="q" type="text" placeholder="Buscar: entregable, lunes, IA, registro, pruebas..."
+          autocomplete="off" />
+        <span class="kbd">⌘ F</span>
+      </div>
+    </div>
+
+    <!-- CAL 1 -->
+    <section class="card reveal" id="cal1"
+      data-key="prácticas tesoem usicamm cinvestav capacitación aarya carmen ivanna cristian rocio evidencias repositorio">
+      <div class="cardHead">
+        <div>
+          <h2 class="title">Mi primer Codigo PP · 2da Gen.</h2>
+          <p class="desc">2 equipos / 4 proyectos.
+            <br>
+            <br> · 5 de TESOEM
+            <br> · 9 del ITIZ-CINVESTAV (solo desarrollo) /
+            <br> · 2 Administrativos TESOEM supervisan y apoyan.
+          </p>
+          <div class="tagRow">
+            <span class="tag purp">Raices mx</span>
+            <span class="tag good">Capacitación en IA</span>
+            <span class="tag warn">Pro docente</span>
+            <span class="tag warn">Sivod</span>
+            <span class="tag warn">Inventario</span>
+          </div>
+        </div>
+        <div class="btn" data-jump="#cal1">
+          <span class="spark"></span>
+          <span>Ver</span>
+        </div>
+      </div>
+
+      <div class="acc">
+        <div class="accItem">
+          <button class="accBtn" type="button" aria-expanded="false">
+            <div class="accLeft">
+              <div class="icon"><span>🗓️</span></div>
+              <div>
+                <div class="accTitle">Semanal (L–V)</div>
+                <div class="accMeta">Presencial L–M–X · Home office J–V</div>
+              </div>
+            </div>
+            <div class="chev" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M8 10l4 4 4-4" stroke="rgba(238,242,255,.85)" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </div>
+          </button>
+          <div class="accPanel">
+            <div class="accInner">
+              <div class="grid2">
+                <div class="miniCard" data-key="lunes presencial producción backlog">
+                  <h4>Lunes · Presencial</h4>
+                  <p>Outboarding + Planeación.
+                    <br>Análisis del Código, calendario actividades, Entregables.
+                  </p>
+                  <div class="kpi"><small>Entregable</small>
+                    <div class="bar"><i data-pct="25"></i></div><small>Plan semanal</small>
+                  </div>
+                </div>
+                <div class="miniCard" data-key="martes presencial capacitación ia usicamm">
+                  <h4>Martes · Presencial</h4>
+                  <p>Capacitación aplicada: IA (Aarya) + USICAMM (Carmen/Ivanna) + maestras (Cristian/Rocío). Luego
+                    desarrollo.</p>
+                  <div class="kpi"><small>Entregable</small>
+                    <div class="bar"><i data-pct="40"></i></div><small>Commit + bitácora</small>
+                  </div>
+                </div>
+                <div class="miniCard" data-key="miércoles presencial integración pruebas">
+                  <h4>Miércoles · Presencial</h4>
+                  <p>Integración de equipos del TESOEM y CINVESTAV. Pruebas funcionales y revisión UX.</p>
+                  <div class="kpi"><small>Entregable</small>
+                    <div class="bar"><i data-pct="55"></i></div><small>Diagnostico del test</small>
+                  </div>
+                </div>
+                <div class="miniCard" data-key="jueves home office desarrollo profundo">
+                  <h4>Jueves · Home office</h4>
+                  <p>Desarrollo por módulo, sin interrupciones. Documentación técnica en
+                    repositorio.</p>
+                  <div class="kpi"><small>Entregable</small>
+                    <div class="bar"><i data-pct="65"></i></div><small>Módulo individual</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="miniCard" style="margin-top:10px" data-key="viernes home office reporte evidencias">
+                <h4>Viernes · Home office</h4>
+                <p>Reporte semanal + carga de evidencias + checklist institucional + planeación de la
+                  siguiente semana.</p>
+                <div class="kpi"><small>Entregable</small>
+                  <div class="bar"><i data-pct="80"></i></div><small>Reporte detallado</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accItem">
+          <button class="accBtn" type="button" aria-expanded="false">
+            <div class="accLeft">
+              <div class="icon"><span>👥</span></div>
+              <div>
+                <div class="accTitle">Roles y foco</div>
+                <div class="accMeta">Quién hace qué</div>
+              </div>
+            </div>
+            <div class="chev" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M8 10l4 4 4-4" stroke="rgba(238,242,255,.85)" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </div>
+          </button>
+          <div class="accPanel">
+            <div class="accInner">
+              <div class="timeline">
+                <div class="titem" data-key="tesoem 7 alumnos prácticas continuidad">
+                  <div class="tbullet"></div>
+                  <div><strong>TESOEM (7)</strong>
+                    <div>Continuidad de los 4 proyectos heredados, documentación, pruebas, QA, UX y tareas por módulo.
+                    </div>
+                  </div>
+                </div>
+                <div class="titem" data-key="programadores 5 continuidad soporte">
+                  <div class="tbullet"></div>
+                  <div><strong>5 Programadores del TESOEM</strong>
+                    <div>Continuidad de los 4 proyectos heredados, despliegue y estabilización técnica.</div>
+                  </div>
+                </div>
+                <div class="titem" data-key="administrativos 2 evidencias supervisión">
+                  <div class="tbullet"></div>
+                  <div><strong>2 Administrativos del TESOEM</strong>
+                    <div>Supervisión del programa, listas, evidencias, asistencia, reportes, agenda y seguimiento.</div>
+                  </div>
+                </div>
+                <div class="titem" data-key="cinvestav satélite desarrollo sin clases">
+                  <div class="tbullet"></div>
+                  <div><strong>9 del ITIZ - CINVESTAV</strong>
+                    <div>Solo a desarrollo en los 4 proyectos. Sin capacitación.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accItem">
+          <button class="accBtn" type="button" aria-expanded="false">
+            <div class="accLeft">
+              <div class="icon"><span>🧭</span></div>
+              <div>
+                <div class="accTitle">Duracion de 6 meses</div>
+                <div class="accMeta">Resultados por fase</div>
+              </div>
+            </div>
+            <div class="chev" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M8 10l4 4 4-4" stroke="rgba(238,242,255,.85)" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </div>
+          </button>
+          <div class="accPanel">
+            <div class="accInner">
+              <div class="timeline">
+                <div class="titem" data-key="mes 1 diagnóstico auditoría">
+                  <div class="tbullet"></div>
+                  <div><strong>Mes 1</strong>
+                    <ul>
+                      <li>Diagnóstico.</li>
+                      <li>Revision de repositorios.</li>
+                      <li>Definición de arquitectura y roles.</li>
+                      <li>Arranque de capacitación.</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="mes 2 desarrollo intensivo">
+                  <div class="tbullet"></div>
+                  <div><strong>Mes 2–3</strong>
+                    <ul>
+                      <li>Desarrollo enfocado</li>
+                      <li>Documentación.</li>
+                      <li>Pruebas continuas.</li>
+                      <li>Integración con CINVESTAV en tareas
+                        específicas.</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="mes 4 integración pruebas">
+                  <div class="tbullet"></div>
+                  <div><strong>Mes 4</strong>
+                    <ul>
+                      <li>Integración general</li>
+                      <li>Pruebas internas</li>
+                      <li>Mejoras UX/flujo del participante.</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="mes 5 producción">
+                  <div class="tbullet"></div>
+                  <div><strong>Mes 5</strong>
+                    <ul>
+                      <li>Desplegar en Productivo</li>
+                      <li>Automatizaciones operativas</li>
+                      <li>Reportes y estabilidad.</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="mes 6 entrega transferencia">
+                  <div class="tbullet"></div>
+                  <div><strong>Mes 6</strong>
+                    <ul>
+                      <li>Entreg a institucional</li>
+                      <li>Documentación final</li>
+                      <li>Manuales</li>
+                      <li>Transferencia a siguiente generación.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CAL 2 -->
+    <section class="card reveal" id="cal2"
+      data-key="ruta64 plataforma registro proyectos consumo local manufactura nubes algarabia donación tejido social medios estructura aarya luz saul victor arath emanuel">
+      <div class="cardHead">
+        <div>
+          <h2 class="title">Ruta64.mx</h2>
+          <p class="desc">
+          <div class="col3">Equipo y
+            Objetivos:</div>
+          <div class="col2">
+            <ul>
+              <li>Aarya</li>
+              <li>Luz</li>
+              <li>Saul</li>
+              <li>Víctor</li>
+              <li>Arath</li>
+              <li>Emanuel</li>
+            </ul>
+            <br>
+            <ul>
+              <li>Registro</li>
+              <li>Selección de proyectos y actividades</li>
+              <li>los 8 módulos.</li>
+            </ul>
+          </div>
+          </p>
+          <div class="tagRow">
+            <span class="tag purp">Plataforma R 64 + 8 Proyectos</span>
+            <span class="tag good">Fuuncionalidades</span>
+            <span class="tag warn">Lanzamiento</span>
+          </div>
+        </div>
+        <div class="btn" data-jump="#cal2">
+          <span class="spark"></span>
+          <span>Ver</span>
+        </div>
+      </div>
+
+      <div class="acc">
+        <div class="accItem">
+          <button class="accBtn" type="button" aria-expanded="false">
+            <div class="accLeft">
+              <div class="icon"><span>🧩</span></div>
+              <div>
+                <div class="accTitle">Distribución por rol</div>
+                <div class="accMeta">Especialización</div>
+              </div>
+            </div>
+            <div class="chev" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M8 10l4 4 4-4" stroke="rgba(238,242,255,.85)" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </div>
+          </button>
+          <div class="accPanel">
+            <div class="accInner">
+              <div class="grid2">
+                <div class="miniCard" data-key="aarya ia automatización">
+                  <h4>Aarya</h4>
+                  <p>IA y automatización.
+                    <br>Reglas inteligentes, seguimiento, clasificación y soporte a decisiones.
+                  </p>
+                </div>
+                <div class="miniCard" data-key="luz saul frontend ux">
+                  <h4>Luz + Saul</h4>
+                  <p>Frontend + UX/UI.
+                    <br>Flujo de registro, selección de proyectos, actividades y dashboard.
+                  </p>
+                </div>
+                <div class="miniCard" data-key="victor arath backend base de datos">
+                  <h4>Víctor + Arath</h4>
+                  <p>Backend + BD.
+                    <br>APIs, modelos, permisos, performance y escalabilidad.
+                  </p>
+                </div>
+                <div class="miniCard" data-key="emanuel integración despliegue">
+                  <h4>Emanuel</h4>
+                  <p>Integración fullstack, despliegue y coordinación técnica del entregable semanal.</p>
+                </div>
+              </div>
+
+              <div class="miniCard" style="margin-top:10px" data-key="registros selección proyectos actividades">
+                <h4>Módulos mínimos del MVP</h4>
+                <p>Registro → Perfil → Selección de proyecto → Selección de actividades → Dashboard de avance → Panel
+                  admin.</p>
+                <div class="kpi"><small>Meta</small>
+                  <div class="bar"><i data-pct="70"></i></div><small>MVP listo</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accItem">
+          <button class="accBtn" type="button" aria-expanded="false">
+            <div class="accLeft">
+              <div class="icon"><span>🗂️</span></div>
+              <div>
+                <div class="accTitle">Proyectos R 64</div>
+                <div class="accMeta">Proyecto por módulo</div>
+              </div>
+            </div>
+            <div class="chev" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M8 10l4 4 4-4" stroke="rgba(238,242,255,.85)" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </div>
+          </button>
+          <div class="accPanel">
+            <div class="accInner">
+              <div class="timeline">
+                <div class="titem" data-key="consumo local">
+                  <div class="tbullet"></div>
+                  <div><strong>1. Consumo local</strong>
+                    <ul>
+                      <li>Registro de comercios</li>
+                      <li>Catálogo</li>
+                      <li>Campañas</li>
+                      <li>Participación ciudadana</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="centros de manufactura">
+                  <div class="tbullet"></div>
+                  <div><strong>2. Centros de manufactura</strong>
+                    <ul>
+                      <li>Convocatorias</li>
+                      <li>Proyectos productivos</li>
+                      <li>Capacidades</li>
+                      <li>Roles</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="nubes municipales inteligentes">
+                  <div class="tbullet"></div>
+                  <div><strong>3. Nubes municipales inteligentes</strong>
+                    <ul>
+                      <li>Servicios digitalizados</li>
+                      <li>Automatizaciones</li>
+                      <li>Solicitudes</li>
+                      <li>Métricas</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="algarabia">
+                  <div class="tbullet"></div>
+                  <div><strong>4. Algarabía</strong>
+                    <ul>
+                      <li>Activaciones</li>
+                      <li>Retos</li>
+                      <li>Participación social</li>
+                      <li>Eventos</li>
+                      <li>Narrativa</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="donación">
+                  <div class="tbullet"></div>
+                  <div><strong>5. Donación</strong>
+                    <ul>
+                      <li>Campañas</li>
+                      <li>Trazabilidad</li>
+                      <li>Transparencia de aportes</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="tejido social">
+                  <div class="tbullet"></div>
+                  <div><strong>6. Tejido social</strong>
+                    <ul>
+                      <li>Iniciativas comunitarias</li>
+                      <li>Voluntariado</li>
+                      <li>Seguimiento</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="medios">
+                  <div class="tbullet"></div>
+                  <div><strong>7. Medios</strong>
+                    <ul>
+                      <li>Publicaciones</li>
+                      <li>Transmisiones</li>
+                      <li>Agenda editorial</li>
+                      <li>Métricas</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="estructura">
+                  <div class="tbullet"></div>
+                  <div><strong>8. Estructura</strong>
+                    <ul>
+                      <li>Gobernanza</li>
+                      <li>roles</li>
+                      <li>reglas</li>
+                      <li>lineamientos</li>
+                      <li>orquestación</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accItem">
+          <button class="accBtn" type="button" aria-expanded="false">
+            <div class="accLeft">
+              <div class="icon"><span>🚀</span></div>
+              <div>
+                <div class="accTitle">Ruta de sprints (6 meses)</div>
+                <div class="accMeta">De arquitectura a beta operativa</div>
+              </div>
+            </div>
+            <div class="chev" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M8 10l4 4 4-4" stroke="rgba(238,242,255,.85)" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </div>
+          </button>
+          <div class="accPanel">
+            <div class="accInner">
+              <div class="timeline">
+                <div class="titem" data-key="mes 1 arquitectura base registro">
+                  <div class="tbullet"></div>
+                  <div><strong>Mes 1</strong>
+                    <ul>
+                      <li>Arquitectura base</li>
+                      <li>Autenticación</li>
+                      <li>Registro</li>
+                      <li>Perfil</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="mes 2 selección de proyectos dashboard">
+                  <div class="tbullet"></div>
+                  <div><strong>Mes 2</strong>
+                    <ul>
+                      <li>Selección de proyectos</li>
+                      <li>Selección de actividades</li>
+                      <li>Dashboard v1</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="mes 3 módulos 8 proyectos">
+                  <div class="tbullet"></div>
+                  <div><strong>Mes 3</strong>
+                    <ul>
+                      <li>Integración de 8 módulos (activables)</li>
+                      <li>Panel admin v1</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="mes 4 pruebas reales ux rendimiento">
+                  <div class="tbullet"></div>
+                  <div><strong>Mes 4</strong>
+                    <ul>
+                      <li>Pruebas reales</li>
+                      <li>UX polish</li>
+                      <li>Rendimiento</li>
+                      <li>Permisos</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="mes 5 beta automatización">
+                  <div class="tbullet"></div>
+                  <div><strong>Mes 5</strong>
+                    <ul>
+                      <li>Beta operativa</li>
+                      <li>Automatizaciones</li>
+                      <li>Monitoreo</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="mes 6 lanzamiento documentación">
+                  <div class="tbullet"></div>
+                  <div><strong>Mes 6</strong>
+                    <ul>
+                      <li>Lanzamiento</li>
+                      <li>Documentación</li>
+                      <li>Handoff</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CAL 3 -->
+    <section class="card reveal" id="cal3"
+      data-key="adriana david operativo seguimiento llamadas correos listas evidencias ruta 64 prácticas profesionales">
+      <div class="cardHead">
+        <div>
+          <h2 class="title">Operación (Adriana + David)</h2>
+          <p class="desc">Actividades de soporte: enviar info, contactar, llamar, dar seguimiento, organizar
+            evidencias y reportes. Apoyan Ruta 64 y prácticas USICAMM.</p>
+          <div class="tagRow">
+            <span class="tag good">Seguimiento diario</span>
+            <span class="tag warn">Reportes semanales</span>
+            <span class="tag purp">Bases limpias</span>
+          </div>
+        </div>
+        <div class="btn" data-jump="#cal3">
+          <span class="spark"></span>
+          <span>Ver</span>
+        </div>
+      </div>
+
+      <div class="acc">
+        <div class="accItem">
+          <button class="accBtn" type="button" aria-expanded="false">
+            <div class="accLeft">
+              <div class="icon"><span>📞</span></div>
+              <div>
+                <div class="accTitle">Semanal</div>
+                <div class="accMeta">Rutina, resultados</div>
+              </div>
+            </div>
+            <div class="chev" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M8 10l4 4 4-4" stroke="rgba(238,242,255,.85)" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </div>
+          </button>
+          <div class="accPanel">
+            <div class="accInner">
+              <div class="timeline">
+                <div class="titem" data-key="lunes envíos comunicados">
+                  <div class="tbullet"></div>
+                  <div><strong>Lunes</strong>
+                    <ul>
+                      <li>Envío de comunicados</li>
+                      <li>Listas y recordatorios</li>
+                      <li>Actualización de pendientes</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="martes contacto registro">
+                  <div class="tbullet"></div>
+                  <div><strong>Martes</strong>
+                    <ul>
+                      <li>Contacto con participantes</li>
+                      <li>Confirmaciones</li>
+                      <li>Agenda y capturas</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="miércoles control evidencias">
+                  <div class="tbullet"></div>
+                  <div><strong>Miércoles</strong>
+                    <ul>
+                      <li>Control de evidencias</li>
+                      <li>Carpetas</li>
+                      <li>Checklist</li>
+                      <li>Seguimiento de faltantes</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="jueves llamadas seguimiento">
+                  <div class="tbullet"></div>
+                  <div><strong>Jueves</strong>
+                    <ul>
+                      <li>Llamadas</li>
+                      <li>Seguimiento 1:1</li>
+                      <li>Aclaraciones</li>
+                      <li>Escalamiento de incidencias</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="titem" data-key="viernes reporte consolidado">
+                  <div class="tbullet"></div>
+                  <div><strong>Viernes</strong>
+                    <ul>
+                      <li>Reporte detallados</li>
+                      <li>Retos superados</li>
+                      <li>Estatus por equipo</li>
+                      <li>Pendientes</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="miniCard" style="margin-top:10px" data-key="kpis operativo">
+                <h4>Retos superados</h4>
+                <p>Contactos realizados, pendientes cerrados, evidencias completas, incidencias escaladas, tiempos de
+                  respuesta.</p>
+                <div class="kpi"><small>Meta</small>
+                  <div class="bar"><i data-pct="60"></i></div><small>Estabilidad</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CAL 4 -->
+    <section class="card reveal" id="cal4"
+      data-key="cinthia cristhian gerardo estrategia logística planeación maratón congreso cacao coco plátano orquestación equipo ruta 64">
+      <div class="cardHead">
+        <div>
+          <h2 class="title">Planeación (Cinthia + Cristhian + Gerardo)</h2>
+          <p class="desc">Diseño de logística y planeaciones:
+          <ul>
+            <li>Plataforma Ruta 64</li>
+            <li>Maratón</li>
+            <li>Congreso</li>
+            <li>Cacao/coco/plátano</li>
+            <li>Programa de prácticas</li>
+          </ul>
+          Orquestación total del equipo.</p>
+          <div class="tagRow">
+            <span class="tag purp">Visión + ejecución</span>
+            <span class="tag good">Decisiones semanales</span>
+            <span class="tag warn">Bloqueo cero</span>
+          </div>
+        </div>
+        <div class="btn" data-jump="#cal4">
+          <span class="spark"></span>
+          <span>Ver</span>
+        </div>
+      </div>
+
+      <div class="acc">
+        <div class="accItem">
+          <button class="accBtn" type="button" aria-expanded="false">
+            <div class="accLeft">
+              <div class="icon"><span>🧠</span></div>
+              <div>
+                <div class="accTitle">Ritmo semanal de orquestación</div>
+                <div class="accMeta">Decidir, desbloquear, acelerar</div>
+              </div>
+            </div>
+            <div class="chev" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M8 10l4 4 4-4" stroke="rgba(238,242,255,.85)" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </div>
+          </button>
+          <div class="accPanel">
+            <div class="accInner">
+              <div class="timeline">
+                <div class="titem" data-key="lunes planeación macro">
+                  <div class="tbullet"></div>
+                  <div><strong>Lunes</strong>
+                    <div>Planeación: prioridades, narrativa, presupuesto de esfuerzo, riesgos y metas semanales.
+                    </div>
+                  </div>
+                </div>
+                <div class="titem" data-key="martes coordinación stakeholders">
+                  <div class="tbullet"></div>
+                  <div><strong>Martes</strong>
+                    <div>Coordinación con equipos y asesores: confirmaciones, acuerdos y calendario de activaciones.
+                    </div>
+                  </div>
+                </div>
+                <div class="titem" data-key="miércoles revisión integración">
+                  <div class="tbullet"></div>
+                  <div><strong>Miércoles</strong>
+                    <div>Revisión: plataforma + eventos + prácticas. Decisiones para mantener velocidad.
+                    </div>
+                  </div>
+                </div>
+                <div class="titem" data-key="jueves diseño logístico">
+                  <div class="tbullet"></div>
+                  <div><strong>Jueves</strong>
+                    <div>Diseño logístico: maratón, congreso, rutas, insumos (cacao/coco/plátano) y ejecución por
+                      bloques.</div>
+                  </div>
+                </div>
+                <div class="titem" data-key="viernes reporte ejecutivo">
+                  <div class="tbullet"></div>
+                  <div><strong>Viernes</strong>
+                    <div>Reporte ejecutivo: estatus, aprendizajes, bloqueos y plan siguiente semana.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid2" style="margin-top:10px">
+                <div class="miniCard" data-key="maratón ruta 64">
+                  <h4>Maratón</h4>
+                  <ul>
+                    <li>Ruta</li>
+                    <li>Permisos</li>
+                    <li>Seguridad</li>
+                    <li>Patrocinio</li>
+                    <li>Logística</li>
+                    <li>Calendario de contenidos</li>
+                  </ul>
+                </div>
+                <div class="miniCard" data-key="congreso">
+                  <h4>Congreso</h4>
+                  <ul>
+                    <li>Agenda</li>
+                    <li>Ponentes</li>
+                    <li>Sede</li>
+                    <li>Producción</li>
+                    <li>Pauta de difusión</li>
+                  </ul>
+                </div>
+                <div class="miniCard" data-key="cacao coco plátano">
+                  <h4>Insumos</h4>
+                  <ul>
+                    <li>Cadena productiva</li>
+                    <li>Narrativa</li>
+                    <li>Prototipos</li>
+                    <li>Manufactura</li>
+                    <li>Activaciones</li>
+                  </ul>
+                </div>
+                <div class="miniCard" data-key="prácticas profesionales">
+                  <h4>Prácticas</h4>
+                  <ul>
+                    <li>Evaluación</li>
+                    <li>Evidencias</li>
+                    <li>Coaching</li>
+                    <li>Transferencia a siguiente generación</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="miniCard" style="margin-top:10px" data-key="kpi estrategia">
+                <h4>KPIs de estrategia</h4>
+                <ul>
+                  <li>Bloqueos resueltos</li>
+                  <li>Decisiones tomadas</li>
+                  <li>Entregables liberados</li>
+                  <li>Alineación</li>
+                  <li>Velocidad de entrega</li>
+                </ul>
+                <div class="kpi"><small>Meta</small>
+                  <div class="bar"><i data-pct="75"></i></div><small>Orquestación</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <div class="footer reveal" data-key="tips uso">
+      Tip: toca cualquier bloque para expandir. Usa el buscador para filtrar por palabra clave. ⌘F funciona con teclado;
+      en iPhone usa Buscar en página del navegador.
+    </div>
+
+  </div>
+
+  <script>
+    (function () {
+      // Time label (lightweight)
+      const nowtxt = document.getElementById('nowtxt');
+      const d = new Date();
+      const days = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+      nowtxt.textContent = `${days[d.getDay()]} · Presencial L–M–X / HO J–V`;
+
+      // Accordion behavior with animated height
+      function closeOthers(current) {
+        document.querySelectorAll('.accItem').forEach(item => {
+          if (item !== current) {
+            const btn = item.querySelector('.accBtn');
+            const panel = item.querySelector('.accPanel');
+            if (btn.getAttribute('aria-expanded') === 'true') {
+              btn.setAttribute('aria-expanded', 'false');
+              panel.style.maxHeight = '0px';
+              item.querySelector('.chev').style.transform = 'rotate(0deg)';
+            }
+          }
+        });
+      }
+
+      document.querySelectorAll('.accItem').forEach(item => {
+        const btn = item.querySelector('.accBtn');
+        const panel = item.querySelector('.accPanel');
+        const chev = item.querySelector('.chev');
+        btn.addEventListener('click', () => {
+          const open = btn.getAttribute('aria-expanded') === 'true';
+          closeOthers(item);
+          btn.setAttribute('aria-expanded', String(!open));
+          if (!open) {
+            panel.style.maxHeight = panel.scrollHeight + 'px';
+            chev.style.transform = 'rotate(180deg)';
+            // animate progress bars inside
+            panel.querySelectorAll('.bar > i').forEach(i => {
+              const pct = i.getAttribute('data-pct') || '0';
+              requestAnimationFrame(() => i.style.width = pct + '%');
+            });
+          } else {
+            panel.style.maxHeight = '0px';
+            chev.style.transform = 'rotate(0deg)';
+          }
+        });
+      });
+
+      // Jump buttons
+      document.querySelectorAll('[data-jump]').forEach(b => {
+        b.addEventListener('click', () => {
+          const target = document.querySelector(b.getAttribute('data-jump'));
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      // Chips navigation
+      const chips = Array.from(document.querySelectorAll('.chip'));
+      chips.forEach(ch => {
+        ch.addEventListener('click', () => {
+          chips.forEach(x => x.classList.remove('active'));
+          ch.classList.add('active');
+          const t = document.querySelector(ch.getAttribute('data-target'));
+          if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      // Search filter (soft hide)
+      const q = document.getElementById('q');
+      const sections = Array.from(document.querySelectorAll('[data-key]'));
+      function norm(s) { return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+
+      function apply() {
+        const term = norm(q.value.trim());
+        sections.forEach(el => {
+          const k = norm(el.getAttribute('data-key'));
+          const hit = !term || k.includes(term);
+          el.style.display = hit ? '' : 'none';
+        });
+      }
+      q.addEventListener('input', apply);
+
+      // Cmd/Ctrl+F focuses search (desktop)
+      window.addEventListener('keydown', (e) => {
+        const isMac = navigator.platform.toUpperCase().includes('MAC');
+        if ((isMac && e.metaKey && e.key.toLowerCase() === 'f') || (!isMac && e.ctrlKey && e.key.toLowerCase() === 'f')) {
+          e.preventDefault();
+          q.focus();
+        }
+      });
+
+      // Reveal on scroll
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(en => {
+          if (en.isIntersecting) {
+            en.target.classList.add('on');
+            io.unobserve(en.target);
+          }
+        });
+      }, { threshold: .12 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+      // Initial bars in visible blocks
+      document.querySelectorAll('.reveal.on .bar > i').forEach(i => {
+        i.style.width = (i.getAttribute('data-pct') || '0') + '%';
+      });
+
+      // Keep accordion height correct on orientation change
+      window.addEventListener('resize', () => {
+        document.querySelectorAll('.accItem').forEach(item => {
+          const btn = item.querySelector('.accBtn');
+          const panel = item.querySelector('.accPanel');
+          if (btn.getAttribute('aria-expanded') === 'true') {
+            panel.style.maxHeight = panel.scrollHeight + 'px';
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,1773 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>NUBES MUNICIPALES INTELIGENTES</title>
+  <meta name="theme-color" content="#0b1020" />
+  <style>
+    :root {
+      --bg: #070b18;
+      --glass: rgba(255, 255, 255, .08);
+      --glass2: rgba(255, 255, 255, .06);
+      --stroke: rgba(255, 255, 255, .14);
+      --stroke2: rgba(255, 255, 255, .10);
+      --text: #eef3ff;
+      --muted: #b6c1e6;
+      --accent: #6ee7ff;
+      --accent2: #9b87ff;
+      --good: #46f3a6;
+      --warn: #ffd36e;
+      --bad: #ff6e8b;
+      --shadow: 0 18px 60px rgba(0, 0, 0, .42);
+      --shadow2: 0 10px 28px rgba(0, 0, 0, .28);
+      --r: 22px;
+      --r2: 18px;
+      --r3: 14px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      --ease: cubic-bezier(.2, .9, .2, 1);
+      --tap: 44px;
+      --pad: 14px;
+      --maxw: 520px;
+      /* iPhone Pro Max friendly */
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(1000px 720px at 20% -10%, rgba(110, 231, 255, .15), transparent 55%),
+        radial-gradient(900px 650px at 95% 12%, rgba(155, 135, 255, .18), transparent 55%),
+        radial-gradient(900px 700px at 25% 120%, rgba(70, 243, 166, .12), transparent 60%),
+        var(--bg);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+
+    .wrap {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: calc(10px + env(safe-area-inset-top)) var(--pad) calc(92px + env(safe-area-inset-bottom));
+    }
+
+    /* Top glass header */
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 10px var(--pad) 10px;
+      margin: 0 calc(var(--pad) * -1);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(7, 11, 24, .92), rgba(7, 11, 24, .62));
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 6px 0 10px;
+      align-items: center;
+      text-align: center;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: .2px;
+      white-space: nowrap;
+    }
+
+    .brand .sub {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+
+    /* Chips row */
+    .chips {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      padding-bottom: 2px;
+    }
+
+    .chip {
+      flex: 1 1 0;
+      height: var(--tap);
+      padding: 0 6px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      background: rgba(255, 255, 255, .06);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      user-select: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform .12s var(--ease), border-color .18s var(--ease), background .18s var(--ease);
+      box-shadow: var(--shadow2);
+    }
+
+    .chip:active {
+      transform: scale(.98)
+    }
+
+    .chip.active {
+      border-color: rgba(110, 231, 255, .55);
+      background: linear-gradient(135deg, rgba(110, 231, 255, .20), rgba(155, 135, 255, .16));
+      box-shadow: 0 18px 50px rgba(110, 231, 255, .12);
+    }
+
+    /* Chip colors matching badges */
+    .chip[data-team="N"] {
+      background: linear-gradient(135deg, rgba(252, 3, 136, 0.22), rgba(252, 3, 136, 0.12));
+      border-color: rgba(252, 3, 136, 0.45);
+    }
+
+    .chip[data-team="b"] {
+      background: linear-gradient(135deg, rgba(243, 227, 83, 0.18), rgba(128, 115, 3, 0.10));
+      border-color: rgba(255, 230, 0, 0.42);
+    }
+
+    .chip[data-team="B"] {
+      background: linear-gradient(135deg, rgba(84, 169, 239, 0.16), rgba(38, 6, 197, 0.08));
+      border-color: rgba(0, 178, 243, 0.40);
+    }
+
+    /* Cards */
+    .card {
+      margin-top: 14px;
+      border-radius: var(--r);
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .04));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-h {
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+      background: rgba(255, 255, 255, .03);
+    }
+
+    .card-h h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+
+    .card-h p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    /* Phase selector (horizontal) */
+    .phaseRow {
+      display: flex;
+      gap: 10px;
+      overflow: auto;
+      padding: 12px 12px 14px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .phasePill {
+      scroll-snap-align: start;
+      min-width: 160px;
+      border-radius: 18px;
+      border: 1px solid var(--stroke);
+      background: rgba(255, 255, 255, .06);
+      padding: 10px 12px;
+      box-shadow: var(--shadow2);
+      cursor: pointer;
+      user-select: none;
+      transition: transform .12s var(--ease), border-color .18s var(--ease), background .18s var(--ease);
+    }
+
+    .phasePill:active {
+      transform: scale(.98)
+    }
+
+    .phasePill .k {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: rgba(238, 243, 255, .86);
+      display: inline-block;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(0, 0, 0, .10);
+      margin-bottom: 8px;
+    }
+
+    .phasePill .t {
+      font-size: 12.5px;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .phasePill .d {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 11.5px;
+    }
+
+    .phasePill.active {
+      border-color: rgba(110, 231, 255, .55);
+      background: linear-gradient(135deg, rgba(70, 243, 166, .14), rgba(110, 231, 255, .12));
+    }
+
+    /* Objectives */
+    .obj {
+      padding: 12px 12px 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .objBox {
+      border-radius: var(--r2);
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .05);
+      padding: 12px;
+      box-shadow: var(--shadow2);
+    }
+
+    .objBox h3 {
+      margin: 0 0 6px;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .25px;
+      text-transform: uppercase;
+      color: rgba(238, 243, 255, .92);
+    }
+
+    .objBox p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    /* Teams accordion */
+    .teams {
+      padding: 10px 10px 12px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .team {
+      border-radius: var(--r);
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .04);
+      overflow: hidden;
+      box-shadow: var(--shadow2);
+    }
+
+    .teamH {
+      padding: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      background: rgba(255, 255, 255, .03);
+      min-height: var(--tap);
+    }
+
+    .badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-weight: 950;
+      letter-spacing: .5px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      flex: 0 0 auto;
+      box-shadow: var(--shadow2);
+      background: rgba(255, 255, 255, .06);
+    }
+
+    .badge.n {
+      background: linear-gradient(135deg, rgba(252, 3, 136, 0.22), rgba(252, 3, 136, 0.12));
+      border-color: rgba(252, 3, 136, 0.35)
+    }
+
+    .badge.u {
+      background: linear-gradient(135deg, rgba(243, 227, 83, 0.18), rgba(128, 115, 3, 0.1));
+      border-color: rgba(255, 230, 0, 0.32)
+    }
+
+    .badge.b {
+      background: linear-gradient(135deg, rgba(84, 169, 239, 0.16), rgba(38, 6, 197, 0.08));
+      border-color: rgba(0, 178, 243, 0.3)
+    }
+
+    .teamTitle {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .teamTitle h3 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 950;
+      line-height: 1.2;
+    }
+
+    .teamTitle p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    .teamMeta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
+      flex: 0 0 auto;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .05);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .chev {
+      width: 38px;
+      height: 38px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .05);
+      display: grid;
+      place-items: center;
+      transition: transform .28s var(--ease);
+    }
+
+    .team.open .chev {
+      transform: rotate(180deg)
+    }
+
+    .teamB {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .5s var(--ease);
+      background: rgba(0, 0, 0, .10);
+    }
+
+    .team.open .teamB {
+      max-height: 4200px;
+    }
+
+    /* Phase accordion inside team */
+    .phase {
+      margin: 10px 12px;
+      border-radius: var(--r2);
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .04);
+      overflow: hidden;
+      box-shadow: var(--shadow2);
+    }
+
+    .phaseH {
+      padding: 12px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+      min-height: var(--tap);
+      background: rgba(255, 255, 255, .03);
+    }
+
+    .phaseH .left {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .phaseH .line1 {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .k {
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(0, 0, 0, .12);
+      color: rgba(238, 243, 255, .86);
+    }
+
+    .phaseH .name {
+      font-weight: 950;
+      font-size: 12.5px;
+      line-height: 1.1;
+      max-width: 46ch;
+    }
+
+    .phaseH .when {
+      color: var(--muted);
+      font-size: 11.5px;
+    }
+
+    .phaseCaret {
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: rgba(255, 255, 255, .05);
+      display: grid;
+      place-items: center;
+      transition: transform .28s var(--ease);
+      flex: 0 0 auto;
+    }
+
+    .phase.open .phaseCaret {
+      transform: rotate(180deg)
+    }
+
+    .phaseB {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .48s var(--ease);
+    }
+
+    .phase.open .phaseB {
+      max-height: 2200px;
+    }
+
+    .phaseContent {
+      padding: 12px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .box {
+      border-radius: var(--r2);
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(255, 255, 255, .04);
+      padding: 12px;
+    }
+
+    .box h4 {
+      margin: 0 0 10px;
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: .28px;
+      text-transform: uppercase;
+      color: rgba(238, 243, 255, .90);
+      opacity: .95;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px
+    }
+
+    li {
+      margin: 8px 0;
+      color: rgba(238, 243, 255, .93);
+      font-size: 12.3px;
+      line-height: 1.3
+    }
+
+    .deliver {
+      display: grid;
+      gap: 10px;
+    }
+
+    .person {
+      border-radius: var(--r2);
+      border: 1px solid rgba(255, 255, 255, .10);
+      background: rgba(0, 0, 0, .10);
+      padding: 12px;
+    }
+
+    .pname {
+      font-size: 12.8px;
+      font-weight: 950;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .pname span {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .plist {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    /* Sticky bottom bar */
+    .bottomBar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 30;
+      padding: 10px var(--pad) calc(10px + env(safe-area-inset-bottom));
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: linear-gradient(to top, rgba(7, 11, 24, .92), rgba(7, 11, 24, .55));
+      border-top: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .barInner {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn {
+      height: var(--tap);
+      border-radius: 18px;
+      border: 1px solid var(--stroke);
+      background: rgba(255, 255, 255, .07);
+      color: var(--text);
+      padding: 0 14px;
+      font-size: 12.5px;
+      font-weight: 900;
+      letter-spacing: .2px;
+      display: inline-flex;
+      align-items: center;
+      gap: 20px;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: var(--shadow2);
+      transition: transform .12s var(--ease), border-color .18s var(--ease), background .18s var(--ease);
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: scale(.98)
+    }
+
+    .btn.primary {
+      border-color: rgba(110, 231, 255, .45);
+      background: linear-gradient(135deg, rgba(110, 231, 255, .18), rgba(155, 135, 255, .14));
+    }
+
+    .btn small {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: rgba(238, 243, 255, .80);
+      font-weight: 800;
+    }
+
+    .status {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: right;
+      line-height: 1.1;
+      min-width: 110px;
+    }
+
+    .status strong {
+      color: rgba(238, 243, 255, .92);
+      font-weight: 950;
+    }
+
+    /* Highlight by active phase */
+    .phase[data-active="true"] {
+      border-color: rgba(110, 231, 255, .40);
+      box-shadow: 0 18px 60px rgba(110, 231, 255, .10);
+    }
+
+    /* Hide */
+    .hide {
+      display: none !important
+    }
+
+    .sr {
+      position: absolute;
+      left: -9999px
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top">
+    <div class="wrap" style="padding:0 var(--pad); max-width: var(--maxw);">
+      <div class="brand">
+        <h1>NUBES MUNICIPALES INTELIGENTES</h1>
+        <div class="sub">Que la tecnología le sirva a la gente.</div>
+      </div>
+
+      <div class="chips" aria-label="Filtro de equipos">
+        <div class="chip active" data-team="all">Equipos</div>
+        <div class="chip" data-team="N"> N </div>
+        <div class="chip" data-team="b"> U </div>
+        <div class="chip" data-team="B"> B </div>
+        <div class="chip" id="reset">Reset</div>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap" style="padding-top:12px;">
+    <section class="card" aria-labelledby="t1">
+      <div class="card-h">
+        <h2 id="t1">Línea de tiempo</h2>
+        <p>Elige una fase.</p>
+      </div>
+      <div class="phaseRow" id="phaseRow">
+        <div class="phasePill active" data-phase="F1">
+          <div class="k">F1</div>
+          <div class="t">Base portable</div>
+          <div class="d">D1–10</div>
+        </div>
+        <div class="phasePill" data-phase="F2">
+          <div class="k">F2</div>
+          <div class="t">MVP en Google</div>
+          <div class="d">D11–25</div>
+        </div>
+        <div class="phasePill" data-phase="F3">
+          <div class="k">F3</div>
+          <div class="t">Desarrollo A/B/C</div>
+          <div class="d">D26–55</div>
+        </div>
+        <div class="phasePill" data-phase="F4">
+          <div class="k">F4</div>
+          <div class="t">Integración + seguridad</div>
+          <div class="d">D56–75</div>
+        </div>
+        <div class="phasePill" data-phase="F5">
+          <div class="k">F5</div>
+          <div class="t">Preparación migración</div>
+          <div class="d">D76–90</div>
+        </div>
+        <div class="phasePill" data-phase="F6">
+          <div class="k">F6</div>
+          <div class="t">Piloto + entrega</div>
+          <div class="d">D91–100</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="t2">
+      <div class="card-h">
+        <h2 id="t2">OBJETIVOS</h2>
+        <p>Desarrollos para el municipio de Comalcalco.</p>
+      </div>
+      <div class="obj">
+        <div class="objBox">
+          <h3>Reportes (WhatsApp + IA)</h3>
+          <p>Automatizar reportes 24/7, clasificar con IA, geolocalizar, generar ticket, asignar y dar estatus en tiempo
+            real.</p>
+        </div>
+        <div class="objBox">
+          <h3>Agua e IoT</h3>
+          <p>Monitorear presión/calidad, detectar fugas, alertar por umbral y tendencia; iniciar con simulación y dejar
+            listo para sensores reales.</p>
+        </div>
+        <div class="objBox">
+          <h3>Ventanilla Única</h3>
+          <p>Digitalizar trámites priorizados con seguimiento y bitácora; reducir dependencia de ventanilla física.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="t3">
+      <div class="card-h">
+        <h2 id="t3">PROYECTOS / FASES</h2>
+        <p>Selecciona y despliega cada fase.</p>
+      </div>
+
+      <div class="teams" id="teams">
+
+        <!-- TEAM N -->
+        <div class="team" data-team="N">
+          <div class="teamH" role="button" tabindex="0" aria-expanded="false">
+            <div class="badge n">N</div>
+            <div class="teamTitle">
+              <h3>Reportes Ciudadanos Inteligentes</h3>
+              <p>WhatsApp + IA + tickets + geolocalización + dashboard.</p>
+            </div>
+            <div class="teamMeta">
+              <div class="tag">4</div>
+              <div class="chev" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="teamB">
+
+            <!-- F1 -->
+            <div class="phase" data-phase="F1">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F1</span><span class="name">Base portable</span></div>
+                  <div class="when">Días 1–10</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Catálogo de reportes (baches, luminarias, basura, fugas) + campos mínimos.</li>
+                      <li>Flujo conversacional WhatsApp (captura, confirmación, estatus).</li>
+                      <li>Modelo de tickets y bitácora (Postgres) + contrato API.</li>
+                      <li>Docker local replicable.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables individuales</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">Gustavo Erick Villeda Domínguez <span>Lead flujo</span></div>
+                        <div class="plist">Diagrama de flujo WhatsApp + catálogo de reportes + validación de campos.
+                        </div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Angel Eduardo Lara Juárez <span>API</span></div>
+                        <div class="plist">Especificación de endpoints (crear reporte, consultar estatus, asignar
+                          ticket).</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">César Márquez Suárez <span>DB</span></div>
+                        <div class="plist">Modelo Postgres (tickets, ubicaciones, estados, bitácora).</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Gabriela Coronel Contreras <span>UX</span></div>
+                        <div class="plist">Wireframe dashboard de reportes + reglas de copy claro.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- F2 -->
+            <div class="phase" data-phase="F2">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F2</span><span class="name">MVP en Google</span></div>
+                  <div class="when">Días 11–25</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Backend mínimo en Cloud Run + Cloud SQL (Postgres).</li>
+                      <li>Dashboard mínimo: lista, detalle, filtros por tipo/estatus.</li>
+                      <li>Integración WhatsApp inicial (stub) para capturar reportes.</li>
+                      <li>Bitácora de cambios de estatus.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables individuales</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">Gustavo Erick Villeda Domínguez <span>Integración</span></div>
+                        <div class="plist">Flujo WhatsApp conectado a /tickets (stub funcional).</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Angel Eduardo Lara Juárez <span>Backend</span></div>
+                        <div class="plist">Servicio API desplegado + guía de despliegue.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">César Márquez Suárez <span>Datos</span></div>
+                        <div class="plist">Migraciones + seed + queries para dashboard.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Gabriela Coronel Contreras <span>UI</span></div>
+                        <div class="plist">Dashboard v1 completo (filtros, detalle, estados).</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- F3 -->
+            <div class="phase" data-phase="F3">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F3</span><span class="name">IA + geo + asignación</span></div>
+                  <div class="when">Días 26–55</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Clasificación automática (tipo/urgencia) con IA.</li>
+                      <li>Geolocalización: captura y visualización por colonia.</li>
+                      <li>Asignación automática a cuadrilla (simulada) + SLA.</li>
+                      <li>Notificación de estatus al ciudadano (WhatsApp).</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables individuales</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">Gustavo Erick Villeda Domínguez <span>IA</span></div>
+                        <div class="plist">Función/prompt de clasificación + pruebas con 30 reportes simulados.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Angel Eduardo Lara Juárez <span>Asignación</span></div>
+                        <div class="plist">Motor simple de asignación + endpoint /assign + reglas SLA.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">César Márquez Suárez <span>Geo</span></div>
+                        <div class="plist">Tablas de ubicación + consulta por colonia + mapa de calor básico.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Gabriela Coronel Contreras <span>Notifs</span></div>
+                        <div class="plist">Plantillas WhatsApp + UI de seguimiento por ticket.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- F4 -->
+            <div class="phase" data-phase="F4">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F4</span><span class="name">Seguridad + métricas</span></div>
+                  <div class="when">Días 56–75</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Roles: ciudadano, operador, supervisor (permisos mínimos).</li>
+                      <li>Auditoría: quién cambió qué y cuándo.</li>
+                      <li>KPIs: tiempo de atención, volumen por colonia.</li>
+                      <li>Backups + monitoreo de errores.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables individuales</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">Gustavo Erick Villeda Domínguez <span>Roles</span></div>
+                        <div class="plist">Matriz de permisos + implementación en endpoints críticos.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Angel Eduardo Lara Juárez <span>Auditoría</span></div>
+                        <div class="plist">Middleware auditoría + vista de bitácora en dashboard.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">César Márquez Suárez <span>KPI</span></div>
+                        <div class="plist">Consultas KPI + export CSV/JSON.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Gabriela Coronel Contreras <span>QA</span></div>
+                        <div class="plist">Pruebas end-to-end + checklist UX para operadores.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- F5 -->
+            <div class="phase" data-phase="F5">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F5</span><span class="name">Portabilidad</span></div>
+                  <div class="when">Días 76–90</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Export/restore Postgres (Cloud SQL → local).</li>
+                      <li>Adjuntos migrables (bucket compatible con MinIO).</li>
+                      <li>Docker Compose local.</li>
+                      <li>Checklist “sin lock-in”.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables individuales</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">Gustavo Erick Villeda Domínguez <span>Runbook</span></div>
+                        <div class="plist">Guía de operación del módulo A + cómo levantar local.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Angel Eduardo Lara Juárez <span>Deploy</span></div>
+                        <div class="plist">Scripts build + variables entorno + verificación.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">César Márquez Suárez <span>DB Mig</span></div>
+                        <div class="plist">Procedimiento dump/restore + pruebas de integridad.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Gabriela Coronel Contreras <span>Manual</span></div>
+                        <div class="plist">Manual rápido para operadores municipales (pantallas + pasos).</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- F6 -->
+            <div class="phase" data-phase="F6">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F6</span><span class="name">Piloto + entrega</span></div>
+                  <div class="when">Días 91–100</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Simulación: 100 reportes con estatus y resolución.</li>
+                      <li>Demo ciudadano → municipio → confirmación.</li>
+                      <li>KPIs: tiempos, volumen, mapa de calor.</li>
+                      <li>Paquete final: código + docs + video demo.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables individuales</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">Gustavo Erick Villeda Domínguez <span>Demo</span></div>
+                        <div class="plist">Guion demo + dataset de reportes + narración técnica.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Angel Eduardo Lara Juárez <span>Estabilidad</span></div>
+                        <div class="plist">Correcciones críticas + release final + versionado.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">César Márquez Suárez <span>KPI</span></div>
+                        <div class="plist">Tablero KPI final + export métricas para reporte.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Gabriela Coronel Contreras <span>Presentación</span></div>
+                        <div class="plist">Guía visual (capturas) + checklist para operación municipal.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TEAM U -->
+        <div class="team" data-team="U">
+          <div class="teamH" role="button" tabindex="0" aria-expanded="false">
+            <div class="badge u">U</div>
+            <div class="teamTitle">
+              <h3>Agua y Telemetría IoT</h3>
+              <p>Lecturas, alertas, detección de fugas y tablero. Simulación primero.</p>
+            </div>
+            <div class="teamMeta">
+              <div class="tag">3</div>
+              <div class="chev" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="teamB">
+            <div class="phase" data-phase="F1">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F1</span><span class="name">Fundación IoT</span></div>
+                  <div class="when">Días 1–10</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Variables: presión, caudal, calidad, estado de bomba, alarmas.</li>
+                      <li>Modelo de lecturas y eventos en Postgres.</li>
+                      <li>Simulador con escenarios (normal, fuga, crisis).</li>
+                      <li>API mínima para ingestión.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables por integrante</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">Brayan del Carmen Cruz Hernández <span>Modelo</span></div>
+                        <div class="plist">Diccionario de variables + umbrales + esquema de eventos.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Alexa Dominguez Castellanos <span>Sim</span></div>
+                        <div class="plist">Simulador de sensores con 3 escenarios.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Gustavo Alexander Solis <span>API</span></div>
+                        <div class="plist">Endpoint /telemetry ingest + validación de payload.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phase" data-phase="F2">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F2</span><span class="name">MVP en Google</span></div>
+                  <div class="when">Días 11–25</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Desplegar ingestión en Cloud Run + Cloud SQL.</li>
+                      <li>Tablero mínimo: últimas lecturas y alertas.</li>
+                      <li>Índices y consultas rápidas.</li>
+                      <li>Export básico de datos.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables por integrante</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">Brayan del Carmen Cruz Hernández <span>Dashboard</span></div>
+                        <div class="plist">Pantallas de estado + alertas + filtros por punto.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Alexa Dominguez Castellanos <span>Data</span></div>
+                        <div class="plist">Dataset simulado + reporte diario de lecturas.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Gustavo Alexander Solis <span>Deploy</span></div>
+                        <div class="plist">Servicio en Cloud Run + conexión segura a DB.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phase" data-phase="F3">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F3</span><span class="name">Alertas + fugas</span></div>
+                  <div class="when">Días 26–55</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Reglas por umbral + tendencia + anomalías.</li>
+                      <li>Motor de alertas (severidad + recomendación).</li>
+                      <li>Mapa/tabla por zona o punto.</li>
+                      <li>Integración con A para reportes de fugas.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables por integrante</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">Brayan del Carmen Cruz Hernández <span>Reglas</span></div>
+                        <div class="plist">Documento de severidades + reglas de detección.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Alexa Dominguez Castellanos <span>Anomalías</span></div>
+                        <div class="plist">Detección simple por ventanas + pruebas con dataset.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Gustavo Alexander Solis <span>Integración</span></div>
+                        <div class="plist">Endpoint /alerts + conexión con dashboard central.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phase" data-phase="F4">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F4</span><span class="name">Hardening</span></div>
+                  <div class="when">Días 56–75</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Permisos por rol en endpoints.</li>
+                      <li>Monitoreo: latencia, errores, tasa ingestión.</li>
+                      <li>Backups y retención de datos.</li>
+                      <li>Reporte semanal: estado del agua por zona.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables individuales</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">Brayan del Carmen Cruz Hernández <span>Operación</span></div>
+                        <div class="plist">Reporte semanal + criterios de escalamiento.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Alexa Dominguez Castellanos <span>Monitoreo</span></div>
+                        <div class="plist">Checklist de salud + tablero de monitoreo.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Gustavo Alexander Solis <span>Seguridad</span></div>
+                        <div class="plist">IAM mínimo + secretos + hardening de endpoints.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phase" data-phase="F5">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F5</span><span class="name">Portabilidad</span></div>
+                  <div class="when">Días 76–90</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Export/restore series de tiempo a Postgres local.</li>
+                      <li>Contenedor IoT corriendo local (Docker Compose).</li>
+                      <li>Documento de integración futura con sensores reales.</li>
+                      <li>Checklist compatibilidad centro de datos.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables individuales</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">Brayan del Carmen Cruz Hernández <span>Runbook</span></div>
+                        <div class="plist">Manual técnico de operación (telemetría y alertas).</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Alexa Dominguez Castellanos <span>Dataset</span></div>
+                        <div class="plist">Dataset final + procedimientos de carga/validación.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Gustavo Alexander Solis <span>Local</span></div>
+                        <div class="plist">Docker Compose + scripts de despliegue local.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phase" data-phase="F6">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F6</span><span class="name">Piloto + entrega</span></div>
+                  <div class="when">Días 91–100</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Simulación de crisis: caída presión + fuga + alertas.</li>
+                      <li>Demo: evolución temporal + respuesta recomendada.</li>
+                      <li>KPIs: detección, tasa de alertas, falsos positivos.</li>
+                      <li>Paquete final: código + manual + demo.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables individuales</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">Brayan del Carmen Cruz Hernández <span>KPIs</span></div>
+                        <div class="plist">Reporte KPI + recomendaciones operativas.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Alexa Dominguez Castellanos <span>Escenarios</span></div>
+                        <div class="plist">Guion de escenarios + dataset de demostración.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Gustavo Alexander Solis <span>Entrega</span></div>
+                        <div class="plist">Release final + checklist de despliegue.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TEAM B -->
+        <div class="team" data-team="B">
+          <div class="teamH" role="button" tabindex="0" aria-expanded="false">
+            <div class="badge b">B</div>
+            <div class="teamTitle">
+              <h3>Ventanilla Única Digital</h3>
+              <p>Portal de trámites con estatus, bitácora y adjuntos migrables.</p>
+            </div>
+            <div class="teamMeta">
+              <div class="tag">3</div>
+              <div class="chev" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="teamB">
+
+            <div class="phase" data-phase="F1">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F1</span><span class="name">Fundación trámites</span></div>
+                  <div class="when">Días 1–10</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Seleccionar 2 trámites piloto (simple + medio) y documentar flujo actual.</li>
+                      <li>Definir estados y bitácora obligatoria por cambio.</li>
+                      <li>Modelo de datos: trámite, requisitos, adjuntos, bitácora.</li>
+                      <li>UX: ciudadano vs operador.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables individuales</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">José Angel Olan de los Santos <span>Flujos</span></div>
+                        <div class="plist">Mapa de flujo de 2 trámites + requisitos mínimos.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Mariana Izquierdo Hernández <span>UX</span></div>
+                        <div class="plist">Wireframes portal ciudadano + operador.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Isidro de los Remedios Marquez Lopez <span>DB</span></div>
+                        <div class="plist">Tablas de trámites + bitácora + adjuntos.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phase" data-phase="F2">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F2</span><span class="name">MVP en Google</span></div>
+                  <div class="when">Días 11–25</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Portal ciudadano: crear trámite + subir adjuntos + ver estatus.</li>
+                      <li>Portal operador: cola + cambiar estatus + solicitar info.</li>
+                      <li>Bitácora automática.</li>
+                      <li>Deploy en Cloud Run + Cloud SQL.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables individuales</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">José Angel Olan de los Santos <span>Backend</span></div>
+                        <div class="plist">Endpoints /tramites + /estados + validación.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Mariana Izquierdo Hernández <span>Front</span></div>
+                        <div class="plist">UI portal ciudadano + operador v1.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Isidro de los Remedios Marquez Lopez <span>Adjuntos</span></div>
+                        <div class="plist">Bucket + metadatos migrables + vista de adjuntos.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phase" data-phase="F3">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F3</span><span class="name">2 trámites end-to-end</span></div>
+                  <div class="when">Días 26–55</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Reglas de requisitos por trámite.</li>
+                      <li>Plantillas de respuesta/notificación.</li>
+                      <li>Control de versiones mínimo.</li>
+                      <li>Consulta de estatus vía WhatsApp (integración con A).</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables individuales</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">José Angel Olan de los Santos <span>Reglas</span></div>
+                        <div class="plist">Validación simple + mensajes de error claros.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Mariana Izquierdo Hernández <span>Notifs</span></div>
+                        <div class="plist">Notificaciones por estado + UI historial.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Isidro de los Remedios Marquez Lopez <span>Bitácora</span></div>
+                        <div class="plist">Bitácora robusta + export para auditoría.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phase" data-phase="F4">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F4</span><span class="name">Seguridad + cola</span></div>
+                  <div class="when">Días 56–75</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Roles + auditoría por acción.</li>
+                      <li>Cola de operación por prioridad (reglas simples).</li>
+                      <li>Backups + monitoreo de errores.</li>
+                      <li>KPIs: tiempo promedio por estado.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables individuales</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">José Angel Olan de los Santos <span>Seguridad</span></div>
+                        <div class="plist">Permisos + protecciones endpoints.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Mariana Izquierdo Hernández <span>Operación</span></div>
+                        <div class="plist">UI cola + filtros + acciones rápidas.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Isidro de los Remedios Marquez Lopez <span>Métricas</span></div>
+                        <div class="plist">KPIs por trámite + export reporte.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phase" data-phase="F5">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F5</span><span class="name">Portabilidad</span></div>
+                  <div class="when">Días 76–90</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Export/restore Postgres a local.</li>
+                      <li>Adjuntos compatibles con MinIO (S3).</li>
+                      <li>Docker Compose para levantar portal local.</li>
+                      <li>Runbook migración al centro de datos.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables individuales</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">José Angel Olan de los Santos <span>Runbook</span></div>
+                        <div class="plist">Documento de migración del módulo C (paso a paso).</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Mariana Izquierdo Hernández <span>Manual</span></div>
+                        <div class="plist">Manual rápido operador/ciudadano (pantallas + pasos).</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Isidro de los Remedios Marquez Lopez <span>Local</span></div>
+                        <div class="plist">Scripts export/import + verificación adjuntos.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="phase" data-phase="F6">
+              <div class="phaseH" role="button" tabindex="0">
+                <div class="left">
+                  <div class="line1"><span class="k">F6</span><span class="name">Piloto + entrega</span></div>
+                  <div class="when">Días 91–100</div>
+                </div>
+                <div class="phaseCaret" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="rgba(238,243,255,.92)" stroke-width="1.9" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></div>
+              </div>
+              <div class="phaseB">
+                <div class="phaseContent">
+                  <div class="box">
+                    <h4>Actividades</h4>
+                    <ul>
+                      <li>Simulación: 40 trámites creados y procesados.</li>
+                      <li>Demo: ciudadano crea → operador procesa → notificación.</li>
+                      <li>KPIs: tiempos por estado y cuellos de botella.</li>
+                      <li>Paquete final: código + docs + demo.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <h4>Entregables individuales</h4>
+                    <div class="deliver">
+                      <div class="person">
+                        <div class="pname">José Angel Olan de los Santos <span>Release</span></div>
+                        <div class="plist">Correcciones finales + versionado + release.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Mariana Izquierdo Hernández <span>Demo</span></div>
+                        <div class="plist">Guion demo + capturas + recorrido guiado.</div>
+                      </div>
+                      <div class="person">
+                        <div class="pname">Isidro de los Remedios Marquez Lopez <span>KPI</span></div>
+                        <div class="plist">Tablero KPI final + export para reporte.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <div class="bottomBar" role="region" aria-label="Barra inferior">
+    <div class="barInner">
+      <button class="btn primary" id="expandAll">
+        <small>⇵</small> Expandir
+      </button>
+      <button class="btn" id="topBtn">
+        <small>↑</small> Arriba
+      </button>
+      <div class="status" id="status">
+        <div><strong>Equipo</strong> Todo</div>
+        <div><strong>Fase</strong> F1</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $ = (s, el = document) => el.querySelector(s);
+    const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
+
+    function toggle(el, cls, force) {
+      const on = (force !== undefined) ? force : !el.classList.contains(cls);
+      el.classList.toggle(cls, on);
+      return on;
+    }
+
+    // Teams accordion
+    $$('#teams .team').forEach(team => {
+      const head = team.querySelector('.teamH');
+      const openTeam = () => {
+        const on = toggle(team, 'open');
+        head.setAttribute('aria-expanded', on ? 'true' : 'false');
+      };
+      head.addEventListener('click', openTeam);
+      head.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openTeam(); }
+      });
+
+      // phases inside
+      $$('.phase', team).forEach(phase => {
+        const ph = phase.querySelector('.phaseH');
+        const openPhase = (e) => { e.stopPropagation(); toggle(phase, 'open'); };
+        ph.addEventListener('click', openPhase);
+        ph.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPhase(e); }
+        });
+      });
+    });
+
+    // Filters
+    const chips = $$('.chip[data-team]');
+    const status = $('#status');
+    let teamFilter = 'all';
+    let activePhase = 'F1';
+
+    function setTeamFilter(t) {
+      teamFilter = t;
+      chips.forEach(c => c.classList.toggle('active', c.dataset.team === t));
+      $$('#teams .team').forEach(team => {
+        const show = (t === 'all') || (team.dataset.team === t);
+        team.classList.toggle('hide', !show);
+      });
+      status.innerHTML = `<div><strong>Equipo</strong> ${t === 'all' ? 'Todo' : t}</div><div><strong>Fase</strong> ${activePhase}</div>`;
+    }
+    chips.forEach(c => c.addEventListener('click', () => setTeamFilter(c.dataset.team)));
+
+    // Phase pills highlight
+    const phasePills = $$('.phasePill');
+    function setActivePhase(p) {
+      activePhase = p;
+      phasePills.forEach(x => x.classList.toggle('active', x.dataset.phase === p));
+      $$('#teams .phase').forEach(ph => {
+        const isActive = ph.dataset.phase === p;
+        ph.setAttribute('data-active', isActive ? 'true' : 'false');
+      });
+      status.innerHTML = `<div><strong>Equipo</strong> ${teamFilter === 'all' ? 'Todo' : teamFilter}</div><div><strong>Fase</strong> ${activePhase}</div>`;
+      const first = $(`#teams .team:not(.hide) .phase[data-phase="${p}"]`);
+      if (first) {
+        const team = first.closest('.team');
+        if (team && !team.classList.contains('open')) {
+          toggle(team, 'open', true);
+          team.querySelector('.teamH').setAttribute('aria-expanded', 'true');
+        }
+        first.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+    phasePills.forEach(p => p.addEventListener('click', () => setActivePhase(p.dataset.phase)));
+
+    // Expand all
+    let expanded = false;
+    const expandBtn = $('#expandAll');
+    expandBtn.addEventListener('click', () => {
+      expanded = !expanded;
+      expandBtn.innerHTML = expanded ? '<small>⇵</small> Colapsar' : '<small>⇵</small> Expandir';
+      $$('#teams .team:not(.hide)').forEach(t => {
+        toggle(t, 'open', expanded);
+        t.querySelector('.teamH').setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        $$('.phase', t).forEach(ph => toggle(ph, 'open', expanded));
+      });
+    });
+
+    // Top
+    $('#topBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // Reset
+    $('#reset').addEventListener('click', () => {
+      $('#q').value = '';
+      setTeamFilter('all');
+      setActivePhase('F1');
+      expanded = false;
+      expandBtn.innerHTML = '<small>⇵</small> Expandir';
+      // close everything
+      $$('#teams .team').forEach(t => {
+        toggle(t, 'open', false);
+        t.classList.remove('hide');
+        t.querySelector('.teamH').setAttribute('aria-expanded', 'false');
+        $$('.phase', t).forEach(ph => toggle(ph, 'open', false));
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Search
+    const q = $('#q');
+    function normalize(s) { return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+    q.addEventListener('input', () => {
+      const term = normalize(q.value.trim());
+      if (!term) {
+        setTeamFilter(teamFilter);
+        return;
+      }
+      const phaseMatch = term.match(/\bf([1-6])\b/);
+      if (phaseMatch) setActivePhase('F' + phaseMatch[1]);
+
+      let shownTeams = 0;
+      $$('#teams .team').forEach(team => {
+        const hay = normalize(team.innerText);
+        const show = hay.includes(term);
+        team.classList.toggle('hide', !show);
+        if (show) {
+          shownTeams++;
+          toggle(team, 'open', true);
+          team.querySelector('.teamH').setAttribute('aria-expanded', 'true');
+        }
+      });
+      status.innerHTML = `<div><strong>Equipo</strong> búsqueda</div><div><strong>Fase</strong> ${activePhase}</div>`;
+    });
+
+    // Init
+    setTeamFilter('all');
+    setActivePhase('F1');
+  </script>
+</body>
+
+</html>
