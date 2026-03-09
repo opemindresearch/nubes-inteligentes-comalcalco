@@ -731,7 +731,19 @@
             toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
         }
 
+        async function loadSupervisorsFromDB() {
+            try {
+                const res = await fetch('http://localhost:3000/api/load?key=iamx_supervisors');
+                const data = await res.json();
+                if (data.success && data.value) {
+                    localStorage.setItem('iamx_supervisors', JSON.stringify(data.value));
+                    renderList();
+                }
+            } catch (e) { console.error('Error loading current sups from DB', e); }
+        }
+
         renderList();
+        loadSupervisorsFromDB();
     </script>
 </body>
 

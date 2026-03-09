@@ -384,6 +384,27 @@
             try { return JSON.parse(localStorage.getItem('iamx_supervisors') || '[]'); } catch (e) { return []; }
         }
 
+        async function getSupervisorsAsync() {
+            try {
+                const res = await fetch('http://localhost:3000/api/load?key=iamx_supervisors');
+                const data = await res.json();
+                if (data.success && data.value) {
+                    localStorage.setItem('iamx_supervisors', JSON.stringify(data.value));
+                    return Array.isArray(data.value) ? data.value : [];
+                }
+            } catch (e) { console.error('Failed to load from DB:', e); }
+            return getSupervisors();
+        }
+
+        async function getPinAsync(u) {
+            try {
+                const res = await fetch('http://localhost:3000/api/load?key=iamx_pin_' + u);
+                const data = await res.json();
+                if (data.success && data.value) return data.value;
+            } catch (e) { console.error('Failed to load PIN from DB:', e); }
+            return localStorage.getItem('iamx_pin_' + u);
+        }
+
         function showRecovery() {
             document.querySelector('.card').style.display = 'none';
             document.getElementById('recForm').style.display = 'block';
@@ -394,7 +415,7 @@
             document.getElementById('recErr').classList.remove('show');
         }
 
-        function doRecover() {
+        async function doRecover() {
             const u = document.getElementById('recUser').value.trim();
             const pin = document.getElementById('recPin').value.trim();
             const newPwd = document.getElementById('recNewPwd').value;
@@ -402,10 +423,11 @@
             errEl.classList.remove('show');
             if (!u || !pin || !newPwd) { showRecErr('Completa todos los campos'); return; }
             if (newPwd.length < 8) { showRecErr('La nueva contraseña debe tener al menos 8 caracteres'); return; }
-            const savedPin = localStorage.getItem('iamx_pin_' + u);
+
+            const savedPin = await getPinAsync(u);
             if (!savedPin) { showRecErr('Este usuario no tiene un PIN configurado. Contacta al administrador.'); return; }
             if (savedPin !== pin) { showRecErr('PIN incorrecto'); return; }
-            const sups = getSupervisors();
+            const sups = await getSupervisorsAsync();
             const idx = sups.findIndex(s => s.username === u);
             if (idx === -1) { showRecErr('Usuario no encontrado'); return; }
             sups[idx].password = newPwd;
@@ -421,7 +443,7 @@
             el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
         }
 
-        function doLogin() {
+        async function doLogin() {
             const u = document.getElementById('username').value.trim();
             const p = document.getElementById('password').value;
             const btn = document.getElementById('btnLogin');
@@ -430,13 +452,16 @@
             if (!u || !p) { showError('Completa todos los campos'); return; }
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span>';
+
+            if (u === SUPER.username && p === SUPER.password) {
+                setSession({ username: u, role: 'superadmin', name: 'Super Admin IAMx' });
+                window.location.href = 'admin.html'; return;
+            }
+
+            const supervisors = await getSupervisorsAsync();
+            const found = supervisors.find(s => s.username === u && s.password === p);
+
             setTimeout(() => {
-                if (u === SUPER.username && p === SUPER.password) {
-                    setSession({ username: u, role: 'superadmin', name: 'Super Admin IAMx' });
-                    window.location.href = 'admin.html'; return;
-                }
-                const supervisors = getSupervisors();
-                const found = supervisors.find(s => s.username === u && s.password === p);
                 if (found) {
                     setSession({ username: u, role: 'supervisor', name: found.name, id: found.id });
                     window.location.href = 'tablero_control_equipos_comalcalco.html'; return;
@@ -444,7 +469,7 @@
                 btn.disabled = false;
                 btn.innerHTML = 'Entrar';
                 showError('Usuario o contraseña incorrectos');
-            }, 800);
+            }, 600);
         }
 
         function setSession(user) { sessionStorage.setItem('iamx_session', JSON.stringify(user)); }

@@ -1574,7 +1574,7 @@
     function showErr(el, msg) { el.textContent = msg; el.style.display = 'block'; }
 
     // ─ Cambiar contraseña ─
-    function cambiarPassword() {
+    async function cambiarPassword() {
       const curr = document.getElementById('pwdCurrent').value;
       const nw = document.getElementById('pwdNew').value;
       const conf = document.getElementById('pwdConfirm').value;
@@ -1583,9 +1583,17 @@
       if (!curr || !nw || !conf) { showErr(errEl, 'Completa todos los campos'); return; }
       if (nw.length < 8) { showErr(errEl, 'Mínimo 8 caracteres'); return; }
       if (nw !== conf) { showErr(errEl, 'Las contraseñas no coinciden'); return; }
-      const sups = JSON.parse(localStorage.getItem('iamx_supervisors') || '[]');
+
+      let sups = [];
+      try {
+        const res = await fetch('http://localhost:3000/api/load?key=iamx_supervisors');
+        const data = await res.json();
+        if (data.success && data.value) sups = data.value;
+      } catch (e) { sups = JSON.parse(localStorage.getItem('iamx_supervisors') || '[]'); }
+
       const idx = sups.findIndex(s => s.username === u.username);
       if (idx === -1) { showErr(errEl, 'Supervisor no encontrado'); return; }
+      if (sups[idx].password !== curr) { showErr(errEl, 'Contraseña actual incorrecta'); return; }
       sups[idx].password = nw;
       localStorage.setItem('iamx_supervisors', JSON.stringify(sups));
       saveToDB('iamx_supervisors', sups);
