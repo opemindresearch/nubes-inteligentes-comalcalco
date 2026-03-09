@@ -614,13 +614,23 @@
             if (s.role !== 'superadmin') { window.location.href = 'login.html'; }
         }
 
-        const MAX_SUPS = 6;
+        // ─ Backend Sync ─
+        async function saveToDB(key, val) {
+            try {
+                await fetch('http://localhost:3000/api/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key, value: val })
+                });
+            } catch (e) { console.error('Error syncing to DB', e); }
+        }
 
         function getSupervisors() {
             try { return JSON.parse(localStorage.getItem('iamx_supervisors') || '[]'); } catch (e) { return []; }
         }
         function saveSupervisors(arr) {
             localStorage.setItem('iamx_supervisors', JSON.stringify(arr));
+            saveToDB('iamx_supervisors', arr);
         }
 
         function renderStats(sups) {

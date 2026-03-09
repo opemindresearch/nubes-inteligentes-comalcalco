@@ -369,6 +369,17 @@
     <script>
         const SUPER = { username: 'iamx', password: 'NubeComalcalco2026!', role: 'superadmin' };
 
+        // ─ Backend Sync ─
+        async function saveToDB(key, val) {
+            try {
+                await fetch('http://localhost:3000/api/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key, value: val })
+                });
+            } catch (e) { console.error('Error syncing to DB', e); }
+        }
+
         function getSupervisors() {
             try { return JSON.parse(localStorage.getItem('iamx_supervisors') || '[]'); } catch (e) { return []; }
         }
@@ -399,6 +410,7 @@
             if (idx === -1) { showRecErr('Usuario no encontrado'); return; }
             sups[idx].password = newPwd;
             localStorage.setItem('iamx_supervisors', JSON.stringify(sups));
+            saveToDB('iamx_supervisors', sups);
             showLogin();
             showError('✅ Contraseña actualizada. Puedes iniciar sesión.');
         }

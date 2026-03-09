@@ -592,6 +592,17 @@
 
         let curProj = 'N';
 
+        // ─ Backend Sync ─
+        async function saveToDB(key, val) {
+            try {
+                await fetch('http://localhost:3000/api/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key, value: val })
+                });
+            } catch (e) { console.error('Error syncing to DB', e); }
+        }
+
         function lsKey(proj) { return `iamx_anexo2_${proj}`; }
 
         function loadData(proj) {
@@ -599,6 +610,7 @@
         }
         function saveData(proj, data) {
             localStorage.setItem(lsKey(proj), JSON.stringify(data));
+            saveToDB(lsKey(proj), data);
         }
 
         function getDefault(proj) {

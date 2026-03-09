@@ -1559,7 +1559,10 @@
 
     // ─ Helpers equipos ─
     function getMyTeams(uid) { try { return JSON.parse(localStorage.getItem('iamx_teams_' + uid) || '[]'); } catch (e) { return []; } }
-    function setMyTeams(uid, teams) { localStorage.setItem('iamx_teams_' + uid, JSON.stringify(teams)); }
+    function setMyTeams(uid, teams) {
+      localStorage.setItem('iamx_teams_' + uid, JSON.stringify(teams));
+      saveToDB('iamx_teams_' + uid, teams);
+    }
     function getCurrentUser() { try { return JSON.parse(sessionStorage.getItem('iamx_session') || '{}'); } catch (e) { return {}; } }
 
     // ─ Modales ─
@@ -1583,9 +1586,9 @@
       const sups = JSON.parse(localStorage.getItem('iamx_supervisors') || '[]');
       const idx = sups.findIndex(s => s.username === u.username);
       if (idx === -1) { showErr(errEl, 'Supervisor no encontrado'); return; }
-      if (sups[idx].password !== curr) { showErr(errEl, 'Contraseña actual incorrecta'); return; }
       sups[idx].password = nw;
       localStorage.setItem('iamx_supervisors', JSON.stringify(sups));
+      saveToDB('iamx_supervisors', sups);
       closeModal('modalPwd');
       ['pwdCurrent', 'pwdNew', 'pwdConfirm'].forEach(id => document.getElementById(id).value = '');
       iToast('✅ Contraseña actualizada');
@@ -1598,6 +1601,7 @@
       const u = getCurrentUser();
       if (!/^\d{4}$/.test(pin)) { showErr(errEl, 'El PIN debe ser exactamente 4 dígitos'); return; }
       localStorage.setItem('iamx_pin_' + u.username, pin);
+      saveToDB('iamx_pin_' + u.username, pin);
       closeModal('modalPin');
       document.getElementById('pinVal').value = '';
       iToast('📌 PIN guardado correctamente');
@@ -1618,7 +1622,10 @@
     // ─ Anotaciones ─
     function annKey(tid) { return 'iamx_ann_' + tid; }
     function getAnn(tid) { return localStorage.getItem(annKey(tid)) || ''; }
-    function saveAnn(tid, val) { localStorage.setItem(annKey(tid), val); }
+    function saveAnn(tid, val) {
+      localStorage.setItem(annKey(tid), val);
+      saveToDB(annKey(tid), val);
+    }
 
     // ─ Toast interno ─
     let _itoastT;
@@ -1633,6 +1640,17 @@
     const DATA = { "meta": { "title": "Tablero de Control · Comalcalco (3×5)", "version": "v1.2", "generated": "2026-03-09" }, "projects": [{ "id": "reporte", "name": "Reporte Ciudadano Inteligente", "goal": "Captura → clasificación IA → geolocalización → ticket → estatus → analítica" }, { "id": "ventanilla", "name": "Ventanilla Única Digital", "goal": "Catálogo trámites → formulario → adjuntos → acuse → seguimiento → bitácora" }, { "id": "semaforo", "name": "Semáforo Inteligente", "goal": "Visión (YOLO) + reglas + telemetría IoT + tablero + piloto en modo recomendación" }], "phases": [{ "id": "F1", "name": "Investigación y Arquitectura", "weeks": "Sem 1–4", "dates": "9 Mar–3 Abr 2026", "focus": "Investigación técnica, diseño de sistema y arquitectura base del proyecto" }, { "id": "F2", "name": "Prototipo Inicial", "weeks": "Sem 5–8", "dates": "6 Abr–1 May 2026", "focus": "Prototipo funcional mínimo, demo interna y validación de arquitectura" }, { "id": "F3", "name": "Desarrollo de Módulos", "weeks": "Sem 9–13", "dates": "4 May–29 May 2026", "focus": "Desarrollo completo de módulos del sistema e integración de componentes" }, { "id": "F4", "name": "Integración del Sistema", "weeks": "Sem 14–17", "dates": "1 Jun–26 Jun 2026", "focus": "Integración completa del sistema, pruebas de integración y correcciones" }, { "id": "F5", "name": "Pruebas y Ajustes", "weeks": "Sem 18–20", "dates": "29 Jun–24 Jul 2026", "focus": "Pruebas de usuario, ajustes, optimizaciones y corrección de errores" }, { "id": "F6", "name": "Entrega y Despliegue", "weeks": "Sem 21–24", "dates": "27 Jul–21 Ago 2026", "focus": "Despliegue final, documentación completa, entrega y presentación del proyecto" }], "teams": [{ "id": "A", "project": "reporte", "name": "Equipo N", "note": "Reporte Ciudadano Inteligente · 2E + 3S", "members": [{ "name": "José Reyes Hernández Alejandro", "role": "Electrónica", "tags": ["E", "Investigación técnica"] }, { "name": "Andrea Morales de la Cruz", "role": "Electrónica", "tags": ["E", "Diseño sistema"] }, { "name": "Gustavo Erick Villeda Domínguez", "role": "Sistemas", "tags": ["S", "Base de datos"] }, { "name": "Angel Eduardo Lara Juárez", "role": "Sistemas", "tags": ["S", "Prototipo UI"] }, { "name": "Cesar Marquez Sanchez", "role": "Sistemas", "tags": ["S", "Plan desarrollo"] }] }, { "id": "B", "project": "ventanilla", "name": "Equipo U", "note": "Ventanilla Única Digital · 5 Sistemas", "members": [{ "name": "Gabriela Coronel Contreras", "role": "Sistemas", "tags": ["S", "Investigación técnica"] }, { "name": "Brayan del Carmen Cruz Hernández", "role": "Sistemas", "tags": ["S", "Diseño sistema"] }, { "name": "Gustavo Alexander Solis Jimenez", "role": "Sistemas", "tags": ["S", "Base de datos"] }, { "name": "José Angel Olan de los Santos", "role": "Sistemas", "tags": ["S", "Prototipo UI"] }, { "name": "Mariana Izquierdo Hernández", "role": "Sistemas", "tags": ["S", "Plan desarrollo"] }] }, { "id": "C", "project": "semaforo", "name": "Equipo B", "note": "Semáforo Inteligente · 3E + 2S", "members": [{ "name": "Lorena Martínez Izquierdo", "role": "Electrónica", "tags": ["E", "Investigación técnica"] }, { "name": "Angel Gabriel Vazquez de la Cruz", "role": "Electrónica", "tags": ["E", "Diseño sistema"] }, { "name": "Paola Estefanía Jiménez Sánchez", "role": "Electrónica", "tags": ["E", "Base de datos"] }, { "name": "Alexa Dominguez Castellanos", "role": "Sistemas", "tags": ["S", "Prototipo UI"] }, { "name": "Isidro de los Remedios Marquez Lopez", "role": "Sistemas", "tags": ["S", "Plan desarrollo"] }] }], "weekly_model": [{ "day": "Lunes (Presencial)", "blocks": [{ "time": "9:00–11:00", "name": "Formación según carrera", "desc": "Aplicación directa al proyecto (tarea técnica del día)" }, { "time": "11:30–13:00", "name": "Sesión con asesor", "desc": "Revisión PRs, bloqueos, decisiones" }, { "time": "13:00–15:00", "name": "Desarrollo", "desc": "Construcción del sprint" }] }, { "day": "Martes (Presencial)", "blocks": [{ "time": "9:00–11:00", "name": "Logística y planeación", "desc": "Sprint planning + asignación" }, { "time": "11:30–15:00", "name": "Desarrollo continuo", "desc": "Implementación + pruebas rápidas" }] }, { "day": "Miércoles (Presencial)", "blocks": [{ "time": "9:00–11:00", "name": "Potencial humano", "desc": "Comunicación, liderazgo, coordinación" }, { "time": "11:30–15:00", "name": "Integración y pruebas", "desc": "Merge, QA, demo interna" }] }, { "day": "Jueves (Presencial)", "blocks": [{ "time": "Bloque 1", "name": "Desarrollo profundo", "desc": "Módulos principales + documentación" }, { "time": "Bloque 2", "name": "IA/Optimización", "desc": "Entrenamientos, métricas, performance" }] }, { "day": "Viernes (Presencial)", "blocks": [{ "time": "Bloque 1", "name": "QA + demo grabada", "desc": "Demo 3–5 min + checklist" }, { "time": "Bloque 2", "name": "Reporte semanal", "desc": "KPI, bloqueos, plan próximo lunes" }] }], "tasks": { "reporte": { "F1": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }], "F2": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }], "F3": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }], "F4": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }], "F5": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }], "F6": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }] }, "ventanilla": { "F1": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }], "F2": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }], "F3": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }], "F4": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }], "F5": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }], "F6": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }] }, "semaforo": { "F1": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }], "F2": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }], "F3": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }], "F4": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }], "F5": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }], "F6": [{ "t": "Investigación técnica", "w": "Documento arquitectura" }, { "t": "Diseño sistema", "w": "Diagrama sistema" }, { "t": "Base de datos", "w": "Modelo datos" }, { "t": "Prototipo UI", "w": "Wireframes UX" }, { "t": "Plan desarrollo", "w": "Backlog proyecto" }] } } };
     const LS_KEY = "comalcalco_tablero_v1";
     let state = { phase: "F1", done: {} };
+
+    // ─ Backend Sync ─
+    async function saveToDB(key, val) {
+      try {
+        await fetch('http://localhost:3000/api/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key, value: val })
+        });
+      } catch (e) { console.error('Error syncing to DB', e); }
+    }
 
     function uid(s) {
       return s.toLowerCase().normalize('NFD')
@@ -1650,7 +1668,10 @@
       } catch (e) { }
     }
     function save() {
-      try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) { }
+      try {
+        localStorage.setItem(LS_KEY, JSON.stringify(state));
+        saveToDB(LS_KEY, state);
+      } catch (e) { }
     }
     function pct(done, total) { return total ? Math.round((done / total) * 100) : 0; }
     function projectTasks(projectId, phaseId) {
