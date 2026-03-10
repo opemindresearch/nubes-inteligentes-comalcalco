@@ -1520,7 +1520,14 @@
     <div class="hint">MI PRIMER CODIGO PARA MI FUTURO - IAMx</div>
   </div>
 
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    // ─ Supabase Setup ─
+    const SUPABASE_URL = 'https://xtyhmghbmsirmlxsxxut.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0eWhtZ2hibXNpcm1seHN4eHV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwOTQ4NjksImV4cCI6MjA4ODY3MDg2OX0.TGV95qf9I1MnQuqs_6HCwSgSTzaVyG5m7MWkvrgglww';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
     // ── Protección de sesión ──
     (function () {
       const sess = sessionStorage.getItem('iamx_session');
@@ -1586,9 +1593,8 @@
 
       let sups = [];
       try {
-        const res = await fetch('http://localhost:3000/api/load?key=iamx_supervisors');
-        const data = await res.json();
-        if (data.success && data.value) sups = data.value;
+        const { data, error } = await supabase.from('records').select('value').eq('key', 'iamx_supervisors').maybeSingle();
+        if (data && data.value) sups = data.value;
       } catch (e) { sups = JSON.parse(localStorage.getItem('iamx_supervisors') || '[]'); }
 
       const idx = sups.findIndex(s => s.username === u.username);
@@ -1652,11 +1658,8 @@
     // ─ Backend Sync ─
     async function saveToDB(key, val) {
       try {
-        await fetch('http://localhost:3000/api/save', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ key, value: val })
-        });
+        const { error } = await supabase.from('records').upsert({ key: key, value: val });
+        if (error) console.error('Supabase save error:', error);
       } catch (e) { console.error('Error syncing to DB', e); }
     }
 
