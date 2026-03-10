@@ -571,7 +571,7 @@
         // ─ Supabase Setup ─
         const SUPABASE_URL = 'https://xtyhmghbmsirmlxsxxut.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0eWhtZ2hibXNpcm1seHN4eHV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwOTQ4NjksImV4cCI6MjA4ODY3MDg2OX0.TGV95qf9I1MnQuqs_6HCwSgSTzaVyG5m7MWkvrgglww';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         /* ── Configuración de proyecto por letra ── */
         const PROJECTS = {
@@ -602,7 +602,7 @@
         // ─ Backend Sync ─
         async function saveToDB(key, val) {
             try {
-                const { error } = await supabase.from('records').upsert({ key: key, value: val });
+                const { error } = await supabaseClient.from('records').upsert({ key: key, value: val });
                 if (error) console.error('Supabase save error:', error);
             } catch (e) { console.error('Error syncing to DB', e); }
         }
