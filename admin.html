@@ -665,15 +665,16 @@
             }
 
             sups.forEach((s, idx) => {
-                const initials = s.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+                const displayName = s.name || s.username || '?';
+                const initials = displayName.split(' ').map(w => w[0] || '').slice(0, 2).join('').toUpperCase();
                 const item = document.createElement('div');
                 item.className = 'sup-item';
                 item.style.animationDelay = `${idx * .06}s`;
                 item.innerHTML = `
           <div class="sup-avatar">${initials}</div>
           <div class="sup-info">
-            <div class="name">${s.name}</div>
-            <div class="meta">${s.area}</div>
+            <div class="name">${displayName}</div>
+            <div class="meta">${s.area || 'Sin Área'}</div>
             <div class="creds">Usuario: ${s.username} · Clave: ${'•'.repeat(s.password.length)}</div>
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
