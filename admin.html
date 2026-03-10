@@ -614,6 +614,9 @@
             if (s.role !== 'superadmin') { window.location.href = 'login.html'; }
         }
 
+        // ─ Constantes ─
+        const MAX_SUPS = 6;
+
         // ─ Backend Sync ─
         async function saveToDB(key, val) {
             try {
